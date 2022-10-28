@@ -34,8 +34,9 @@
             this.loadobjFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.canvas = new System.Windows.Forms.PictureBox();
-            this.viewGbox = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.showEdgesRbutton = new System.Windows.Forms.RadioButton();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.showVerticiesRbutton = new System.Windows.Forms.RadioButton();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -43,7 +44,8 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
-            this.viewGbox.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -87,7 +89,8 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.viewGbox);
+            this.splitContainer1.Panel2.Controls.Add(this.panel2);
+            this.splitContainer1.Panel2.Controls.Add(this.panel1);
             this.splitContainer1.Size = new System.Drawing.Size(982, 721);
             this.splitContainer1.SplitterDistance = 721;
             this.splitContainer1.TabIndex = 1;
@@ -101,18 +104,15 @@
             this.canvas.TabIndex = 0;
             this.canvas.TabStop = false;
             // 
-            // viewGbox
+            // panel2
             // 
-            this.viewGbox.AutoSize = true;
-            this.viewGbox.Controls.Add(this.showEdgesRbutton);
-            this.viewGbox.Controls.Add(this.showVerticiesRbutton);
-            this.viewGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.viewGbox.Location = new System.Drawing.Point(0, 0);
-            this.viewGbox.Name = "viewGbox";
-            this.viewGbox.Size = new System.Drawing.Size(257, 110);
-            this.viewGbox.TabIndex = 0;
-            this.viewGbox.TabStop = false;
-            this.viewGbox.Text = "View";
+            this.panel2.AutoSize = true;
+            this.panel2.Controls.Add(this.showEdgesRbutton);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 42);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(257, 42);
+            this.panel2.TabIndex = 3;
             // 
             // showEdgesRbutton
             // 
@@ -120,9 +120,9 @@
             this.showEdgesRbutton.AutoSize = true;
             this.showEdgesRbutton.Dock = System.Windows.Forms.DockStyle.Top;
             this.showEdgesRbutton.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.showEdgesRbutton.Location = new System.Drawing.Point(3, 65);
+            this.showEdgesRbutton.Location = new System.Drawing.Point(0, 0);
             this.showEdgesRbutton.Name = "showEdgesRbutton";
-            this.showEdgesRbutton.Size = new System.Drawing.Size(251, 42);
+            this.showEdgesRbutton.Size = new System.Drawing.Size(257, 42);
             this.showEdgesRbutton.TabIndex = 1;
             this.showEdgesRbutton.TabStop = true;
             this.showEdgesRbutton.Text = "Show edges";
@@ -130,15 +130,25 @@
             this.showEdgesRbutton.UseVisualStyleBackColor = true;
             this.showEdgesRbutton.CheckedChanged += new System.EventHandler(this.showRbutton_CheckedChanged);
             // 
+            // panel1
+            // 
+            this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.showVerticiesRbutton);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(257, 42);
+            this.panel1.TabIndex = 2;
+            // 
             // showVerticiesRbutton
             // 
             this.showVerticiesRbutton.Appearance = System.Windows.Forms.Appearance.Button;
             this.showVerticiesRbutton.AutoSize = true;
             this.showVerticiesRbutton.Dock = System.Windows.Forms.DockStyle.Top;
             this.showVerticiesRbutton.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.showVerticiesRbutton.Location = new System.Drawing.Point(3, 23);
+            this.showVerticiesRbutton.Location = new System.Drawing.Point(0, 0);
             this.showVerticiesRbutton.Name = "showVerticiesRbutton";
-            this.showVerticiesRbutton.Size = new System.Drawing.Size(251, 42);
+            this.showVerticiesRbutton.Size = new System.Drawing.Size(257, 42);
             this.showVerticiesRbutton.TabIndex = 0;
             this.showVerticiesRbutton.TabStop = true;
             this.showVerticiesRbutton.Text = "Show verticies";
@@ -169,8 +179,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
-            this.viewGbox.ResumeLayout(false);
-            this.viewGbox.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,8 +195,9 @@
         private ToolStripMenuItem loadobjFileToolStripMenuItem;
         private SplitContainer splitContainer1;
         private PictureBox canvas;
-        private GroupBox viewGbox;
         private RadioButton showEdgesRbutton;
         private RadioButton showVerticiesRbutton;
+        private Panel panel1;
+        private Panel panel2;
     }
 }

@@ -19,6 +19,7 @@ namespace GK1_PROJ2
         private static Brush blackBrush = Brushes.Black;
         private const int pointRadious = 4;
         private static Pen edgePen = new Pen(blackBrush, 2);
+        private const int padding = 10;
 
         public mainWindow()
         {
@@ -33,7 +34,7 @@ namespace GK1_PROJ2
         }
         private void clearCanvasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // todo: implement restarting whole program
+            clean();
         }
         private void loadobjFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -43,6 +44,8 @@ namespace GK1_PROJ2
                 dialog.Title = "Load .obj file";
 
                 if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    clean();
                     if (processFile(dialog.FileName))
                     {
                         rescaleVerticies();
@@ -52,6 +55,7 @@ namespace GK1_PROJ2
                         //Debug.WriteLine("minZ = " + minZ.ToString() + ", maxZ = " + maxZ.ToString() + ".");
                         repaint();
                     }
+                }
             }
         }
         private bool processFile(string path)
@@ -135,19 +139,23 @@ namespace GK1_PROJ2
         }
         private void rescaleVerticies()
         {
-            bool Y = canvas.Height <= canvas.Width;
+            var height = canvas.Height - padding;
+            var width = canvas.Width - padding;
+
+            bool Y = (height < width);
             float k;
             if (Y)
             {
-                k = canvas.Height / (maxY - minY);
-                k = 400;
+                k = height / (maxY - minY);
                 foreach (var v in vertices)
                 {
                     v.y -= minY;
                     v.y *= k;
+                    v.y += (padding / 2);
                     v.x -= minX;
-                    v.x += (canvas.Width - canvas.Height) / 2;
+                    v.x += (width - height) / 2;
                     v.x *= k;
+                    v.x += (padding / 2);
                     v.z -= minZ;
                     v.z *= k;
                     v.normal.x *= k;
@@ -157,15 +165,16 @@ namespace GK1_PROJ2
             }
             else
             {
-                k = canvas.Width / (maxX - minX);
-                k = 400;
+                k = width / (maxX - minX);
                 foreach (var v in vertices)
                 {
                     v.x -= minX;
                     v.x *= k;
+                    v.x += (padding / 2);
                     v.y -= minY;
-                    v.y += (canvas.Height - canvas.Width) / 2;
+                    v.y += (height - width) / 2;
                     v.y *= k;
+                    v.y += (padding / 2);
                     v.z -= minZ;
                     v.z *= k;
                     v.normal.x *= k;
@@ -203,6 +212,16 @@ namespace GK1_PROJ2
         private void showRbutton_CheckedChanged(object sender, EventArgs e)
         {
             repaint();
+        }
+        private void clean()
+        {
+            vertices = new List<Vertex>();
+            polygons = new List<Polygon>();
+            normals = new List<Vector>();
+            drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
+            canvas.Image = drawArea;
+            using (Graphics g = Graphics.FromImage(drawArea))
+                g.Clear(canvasColor);
         }
     }
     public class Vertex
