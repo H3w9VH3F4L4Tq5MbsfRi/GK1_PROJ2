@@ -15,6 +15,10 @@ namespace GK1_PROJ2
         private float maxY;
         private float maxZ;
         private Bitmap drawArea;
+        private static Color canvasColor = Color.HotPink;
+        private static Brush blackBrush = Brushes.Black;
+        private const int pointRadious = 4;
+        private static Pen edgePen = new Pen(blackBrush, 2);
 
         public mainWindow()
         {
@@ -25,11 +29,8 @@ namespace GK1_PROJ2
             drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
-            {
-                g.Clear(Color.HotPink);
-            }
+                g.Clear(canvasColor);
         }
-
         private void clearCanvasToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // todo: implement restarting whole program
@@ -49,6 +50,7 @@ namespace GK1_PROJ2
                         //Debug.WriteLine("minX = " + minX.ToString() + ", maxX = " + maxX.ToString() + ".");
                         //Debug.WriteLine("minY = " + minY.ToString() + ", maxY = " + maxY.ToString() + ".");
                         //Debug.WriteLine("minZ = " + minZ.ToString() + ", maxZ = " + maxZ.ToString() + ".");
+                        repaint();
                     }
             }
         }
@@ -100,7 +102,7 @@ namespace GK1_PROJ2
                             }
                         case "f":
                             {
-                                
+
                                 polygons.Add(new Polygon());
                                 for (int i = 1; i < parts.Length; i++)
                                 {
@@ -108,7 +110,7 @@ namespace GK1_PROJ2
                                     v = int.Parse(parts2[0]) - 1;
                                     vn = int.Parse(parts2[2]) - 1;
                                     vertices[v].normal = normals[vn];
-                                    polygons[polygons.Count - 1].vectors.Add(vertices[v]);
+                                    polygons[polygons.Count - 1].verticies.Add(vertices[v]);
                                 }
                                 break;
                             }
@@ -127,7 +129,7 @@ namespace GK1_PROJ2
             }
             catch
             {
-                MessageBox.Show("Unable to load selected .obj file.","Exeption while loading",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("Unable to load selected .obj file.", "Exeption while loading", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -138,6 +140,7 @@ namespace GK1_PROJ2
             if (Y)
             {
                 k = canvas.Height / (maxY - minY);
+                k = 400;
                 foreach (var v in vertices)
                 {
                     v.y -= minY;
@@ -145,6 +148,7 @@ namespace GK1_PROJ2
                     v.x -= minX;
                     v.x += (canvas.Width - canvas.Height) / 2;
                     v.x *= k;
+                    v.z -= minZ;
                     v.z *= k;
                     v.normal.x *= k;
                     v.normal.y *= k;
@@ -154,13 +158,15 @@ namespace GK1_PROJ2
             else
             {
                 k = canvas.Width / (maxX - minX);
-                foreach(var v in vertices)
+                k = 400;
+                foreach (var v in vertices)
                 {
                     v.x -= minX;
                     v.x *= k;
                     v.y -= minY;
                     v.y += (canvas.Height - canvas.Width) / 2;
                     v.y *= k;
+                    v.z -= minZ;
                     v.z *= k;
                     v.normal.x *= k;
                     v.normal.y *= k;
@@ -168,8 +174,37 @@ namespace GK1_PROJ2
                 }
             }
         }
-    }
+        private void repaint()
+        {
+            using (Graphics g = Graphics.FromImage(drawArea))
+            {
+                g.Clear(canvasColor);
 
+                foreach (var p in polygons)
+                    for (int i = 0; i < p.verticies.Count; i++)
+                    {
+                        if (showVerticiesRbutton.Checked)
+                            paintPoint(g, p.verticies[i].x, p.verticies[i].y, blackBrush);
+                        if (showEdgesRbutton.Checked)
+                        {
+                            int inext = (i + 1 == p.verticies.Count) ? 0 : i + 1;
+                            PointF start = new PointF(p.verticies[i].x, p.verticies[i].y);
+                            PointF end = new PointF(p.verticies[inext].x, p.verticies[inext].y);
+                            g.DrawLine(edgePen, start, end);
+                        }
+                    }
+            }
+            canvas.Refresh();
+        }
+        private void paintPoint(Graphics g, float x, float y, Brush color, int rad = pointRadious)
+        {
+            g.FillEllipse(color, x - rad, y - rad, rad * 2, rad * 2);
+        }
+        private void showRbutton_CheckedChanged(object sender, EventArgs e)
+        {
+            repaint();
+        }
+    }
     public class Vertex
     {
         public float x;
@@ -200,11 +235,11 @@ namespace GK1_PROJ2
     }
     public class Polygon
     {
-        public List<Vertex> vectors;
+        public List<Vertex> verticies;
 
         public Polygon()
         {
-            this.vectors = new List<Vertex>();
+            this.verticies = new List<Vertex>();
         }
     }
 }
