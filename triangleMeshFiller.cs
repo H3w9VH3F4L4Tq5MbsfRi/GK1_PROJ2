@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace GK1_PROJ2
@@ -7,6 +8,13 @@ namespace GK1_PROJ2
         private List<Vertex> vertices;
         private List<Polygon> polygons;
         private List<Vector> normals;
+        private float minX;
+        private float minY;
+        private float minZ;
+        private float maxX;
+        private float maxY;
+        private float maxZ;
+        private Bitmap drawArea;
 
         public mainWindow()
         {
@@ -14,13 +22,18 @@ namespace GK1_PROJ2
             vertices = new List<Vertex>();
             polygons = new List<Polygon>();
             normals = new List<Vector>();
+            drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
+            canvas.Image = drawArea;
+            using (Graphics g = Graphics.FromImage(drawArea))
+            {
+                g.Clear(Color.HotPink);
+            }
         }
 
         private void clearCanvasToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // todo: implement restarting whole program
         }
-
         private void loadobjFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var dialog = new OpenFileDialog())
@@ -30,7 +43,13 @@ namespace GK1_PROJ2
 
                 if (dialog.ShowDialog() == DialogResult.OK)
                     if (processFile(dialog.FileName))
-                        MessageBox.Show("Loaded succesfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    {
+                        rescaleVerticies();
+                        MessageBox.Show("Succesfully loaded " + polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        //Debug.WriteLine("minX = " + minX.ToString() + ", maxX = " + maxX.ToString() + ".");
+                        //Debug.WriteLine("minY = " + minY.ToString() + ", maxY = " + maxY.ToString() + ".");
+                        //Debug.WriteLine("minZ = " + minZ.ToString() + ", maxZ = " + maxZ.ToString() + ".");
+                    }
             }
         }
         private bool processFile(string path)
@@ -57,6 +76,18 @@ namespace GK1_PROJ2
                                 y = float.Parse(parts[2]);
                                 z = float.Parse(parts[3]);
                                 vertices.Add(new Vertex(x, y, z));
+                                if (x < minX)
+                                    minX = x;
+                                if (x > maxX)
+                                    maxX = x;
+                                if (y < minY)
+                                    minY = y;
+                                if (y > maxY)
+                                    maxY = y;
+                                if (z < minZ)
+                                    minZ = z;
+                                if (z > maxZ)
+                                    maxZ = z;
                                 break;
                             }
                         case "vn":
@@ -69,12 +100,13 @@ namespace GK1_PROJ2
                             }
                         case "f":
                             {
+                                
                                 polygons.Add(new Polygon());
                                 for (int i = 1; i < parts.Length; i++)
                                 {
                                     parts2 = parts[i].Split('/');
-                                    v = int.Parse(parts2[0]);
-                                    vn = int.Parse(parts2[2]);
+                                    v = int.Parse(parts2[0]) - 1;
+                                    vn = int.Parse(parts2[2]) - 1;
                                     vertices[v].normal = normals[vn];
                                     polygons[polygons.Count - 1].vectors.Add(vertices[v]);
                                 }
@@ -93,11 +125,47 @@ namespace GK1_PROJ2
                 else
                     throw new Exception();
             }
-            catch (Exception ex)
+            catch
             {
-                //MessageBox.Show("Unable to load selected .obj file.","Exeption while loading",MessageBoxButtons.OK,MessageBoxIcon.Error);
-                throw ex;
+                MessageBox.Show("Unable to load selected .obj file.","Exeption while loading",MessageBoxButtons.OK,MessageBoxIcon.Error);
                 return false;
+            }
+        }
+        private void rescaleVerticies()
+        {
+            bool Y = canvas.Height <= canvas.Width;
+            float k;
+            if (Y)
+            {
+                k = canvas.Height / (maxY - minY);
+                foreach (var v in vertices)
+                {
+                    v.y -= minY;
+                    v.y *= k;
+                    v.x -= minX;
+                    v.x += (canvas.Width - canvas.Height) / 2;
+                    v.x *= k;
+                    v.z *= k;
+                    v.normal.x *= k;
+                    v.normal.y *= k;
+                    v.normal.z *= k;
+                }
+            }
+            else
+            {
+                k = canvas.Width / (maxX - minX);
+                foreach(var v in vertices)
+                {
+                    v.x -= minX;
+                    v.x *= k;
+                    v.y -= minY;
+                    v.y += (canvas.Height - canvas.Width) / 2;
+                    v.y *= k;
+                    v.z *= k;
+                    v.normal.x *= k;
+                    v.normal.y *= k;
+                    v.normal.z *= k;
+                }
             }
         }
     }
