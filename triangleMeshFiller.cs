@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace GK1_PROJ2
 {
@@ -20,7 +22,10 @@ namespace GK1_PROJ2
         private const int pointRadious = 4;
         private static Pen edgePen = new Pen(blackBrush, 2);
         private const int padding = 10;
-
+        private const int kMin = 0;
+        private const int kMax = 0;
+        private const int mMin = 1;
+        private const int mMax = 100;
         public mainWindow()
         {
             InitializeComponent();
@@ -49,11 +54,11 @@ namespace GK1_PROJ2
                     if (processFile(dialog.FileName))
                     {
                         rescaleVerticies();
+                        repaint();
                         MessageBox.Show("Succesfully loaded " + polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         //Debug.WriteLine("minX = " + minX.ToString() + ", maxX = " + maxX.ToString() + ".");
                         //Debug.WriteLine("minY = " + minY.ToString() + ", maxY = " + maxY.ToString() + ".");
                         //Debug.WriteLine("minZ = " + minZ.ToString() + ", maxZ = " + maxZ.ToString() + ".");
-                        repaint();
                     }
                 }
             }
@@ -223,6 +228,50 @@ namespace GK1_PROJ2
             using (Graphics g = Graphics.FromImage(drawArea))
                 g.Clear(canvasColor);
         }
+        private void kdTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            double val = kdTrackBar.Value;
+            val /= 1000;
+            kdTxtBox.Text = val.ToString("0.000");
+        }
+        private void ksTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            double val = ksTrackBar.Value;
+            val /= 1000;
+            ksTxtBox.Text = val.ToString("0.000");
+        }
+        private void mTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            double val = mTrackBar.Value;
+            val /= 1000;
+            mTxtBox.Text = val.ToString("0.000");
+        }
+        private void changeColorButton_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.AllowFullOpen = true;
+            colorDialog.Color = lightColorPreview.BackColor;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+                lightColorPreview.BackColor = colorDialog.Color;
+        }
+        //private void kdTxtBox_TextChanged(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        double val = double.Parse(kdTxtBox.Text);
+        //        if (val < kMin || val > kMax)
+        //            throw new Exception();
+        //        Int32 value = (Int32)(val * 1000);
+        //        kdTxtBox.Text = val.ToString("0.000");
+        //    }
+        //    catch
+        //    {
+        //        MessageBox.Show("Provided invalid value", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        double val = kdTrackBar.Value;
+        //        val /= 1000;
+        //        kdTxtBox.Text = val.ToString("0.000");
+        //    }
+        //}
     }
     public class Vertex
     {
