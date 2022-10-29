@@ -142,7 +142,7 @@ namespace GK1_PROJ2
             var height = canvas.Height - padding;
             var width = canvas.Width - padding;
 
-            bool Y = (height < width);
+            bool Y = ((height / (maxY - minY)) < (width / (maxX - minX)));
             float k;
             if (Y)
             {
@@ -192,9 +192,9 @@ namespace GK1_PROJ2
                 foreach (var p in polygons)
                     for (int i = 0; i < p.verticies.Count; i++)
                     {
-                        if (showVerticiesRbutton.Checked)
+                        if (showVerticiesCbox.Checked)
                             paintPoint(g, p.verticies[i].x, p.verticies[i].y, blackBrush);
-                        if (showEdgesRbutton.Checked)
+                        if (showEdgesCbox.Checked)
                         {
                             int inext = (i + 1 == p.verticies.Count) ? 0 : i + 1;
                             PointF start = new PointF(p.verticies[i].x, p.verticies[i].y);
@@ -209,7 +209,7 @@ namespace GK1_PROJ2
         {
             g.FillEllipse(color, x - rad, y - rad, rad * 2, rad * 2);
         }
-        private void showRbutton_CheckedChanged(object sender, EventArgs e)
+        private void showCbox_CheckedChanged(object sender, EventArgs e)
         {
             repaint();
         }
