@@ -35,8 +35,15 @@
             this.visibilityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showVerticiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showEdgesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.colorDeterminationMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.calculatedAtPointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.vetrexInterpolationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.canvas = new System.Windows.Forms.PictureBox();
+            this.normalsGbox = new System.Windows.Forms.GroupBox();
+            this.normalMapLoadButton = new System.Windows.Forms.Button();
+            this.normalMapTxtBox = new System.Windows.Forms.TextBox();
+            this.modifyNormalsCbutton = new System.Windows.Forms.CheckBox();
             this.objectColorGbox = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.objectColorTextureModeRbutton = new System.Windows.Forms.RadioButton();
@@ -63,15 +70,13 @@
             this.kdGbox = new System.Windows.Forms.GroupBox();
             this.kdTrackBar = new System.Windows.Forms.TrackBar();
             this.kdTxtBox = new System.Windows.Forms.TextBox();
-            this.colorDeterminationMethodGbox = new System.Windows.Forms.GroupBox();
-            this.vertexInterpolationRbutton = new System.Windows.Forms.RadioButton();
-            this.calcAtPointRbutton = new System.Windows.Forms.RadioButton();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
+            this.normalsGbox.SuspendLayout();
             this.objectColorGbox.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectColorSolidTxtBox)).BeginInit();
@@ -87,7 +92,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.ksTrackBar)).BeginInit();
             this.kdGbox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kdTrackBar)).BeginInit();
-            this.colorDeterminationMethodGbox.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -97,7 +101,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearCanvasToolStripMenuItem,
             this.loadobjFileToolStripMenuItem,
-            this.visibilityToolStripMenuItem});
+            this.visibilityToolStripMenuItem,
+            this.colorDeterminationMethodToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 3, 0, 3);
@@ -149,6 +154,33 @@
             this.showEdgesToolStripMenuItem.Text = "Show edges";
             this.showEdgesToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showToolStripMenuItem_CheckedChanged);
             // 
+            // colorDeterminationMethodToolStripMenuItem
+            // 
+            this.colorDeterminationMethodToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.calculatedAtPointToolStripMenuItem,
+            this.vetrexInterpolationToolStripMenuItem});
+            this.colorDeterminationMethodToolStripMenuItem.Name = "colorDeterminationMethodToolStripMenuItem";
+            this.colorDeterminationMethodToolStripMenuItem.Size = new System.Drawing.Size(213, 24);
+            this.colorDeterminationMethodToolStripMenuItem.Text = "Color determination method";
+            // 
+            // calculatedAtPointToolStripMenuItem
+            // 
+            this.calculatedAtPointToolStripMenuItem.Checked = true;
+            this.calculatedAtPointToolStripMenuItem.CheckOnClick = true;
+            this.calculatedAtPointToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.calculatedAtPointToolStripMenuItem.Name = "calculatedAtPointToolStripMenuItem";
+            this.calculatedAtPointToolStripMenuItem.Size = new System.Drawing.Size(223, 26);
+            this.calculatedAtPointToolStripMenuItem.Text = "Calculated at point";
+            this.calculatedAtPointToolStripMenuItem.Click += new System.EventHandler(this.calculatedAtPointToolStripMenuItem_Click);
+            // 
+            // vetrexInterpolationToolStripMenuItem
+            // 
+            this.vetrexInterpolationToolStripMenuItem.CheckOnClick = true;
+            this.vetrexInterpolationToolStripMenuItem.Name = "vetrexInterpolationToolStripMenuItem";
+            this.vetrexInterpolationToolStripMenuItem.Size = new System.Drawing.Size(223, 26);
+            this.vetrexInterpolationToolStripMenuItem.Text = "Vetrex interpolation";
+            this.vetrexInterpolationToolStripMenuItem.Click += new System.EventHandler(this.vetrexInterpolationToolStripMenuItem_Click);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -163,10 +195,10 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.normalsGbox);
             this.splitContainer1.Panel2.Controls.Add(this.objectColorGbox);
             this.splitContainer1.Panel2.Controls.Add(this.lightSourceGbox);
             this.splitContainer1.Panel2.Controls.Add(this.coefficientsGbox);
-            this.splitContainer1.Panel2.Controls.Add(this.colorDeterminationMethodGbox);
             this.splitContainer1.Size = new System.Drawing.Size(982, 721);
             this.splitContainer1.SplitterDistance = 721;
             this.splitContainer1.TabIndex = 1;
@@ -180,6 +212,62 @@
             this.canvas.TabIndex = 0;
             this.canvas.TabStop = false;
             // 
+            // normalsGbox
+            // 
+            this.normalsGbox.Controls.Add(this.normalMapLoadButton);
+            this.normalsGbox.Controls.Add(this.normalMapTxtBox);
+            this.normalsGbox.Controls.Add(this.modifyNormalsCbutton);
+            this.normalsGbox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.normalsGbox.Location = new System.Drawing.Point(0, 625);
+            this.normalsGbox.MaximumSize = new System.Drawing.Size(250, 90);
+            this.normalsGbox.Name = "normalsGbox";
+            this.normalsGbox.Size = new System.Drawing.Size(250, 90);
+            this.normalsGbox.TabIndex = 11;
+            this.normalsGbox.TabStop = false;
+            this.normalsGbox.Text = "Normals";
+            // 
+            // normalMapLoadButton
+            // 
+            this.normalMapLoadButton.AutoSize = true;
+            this.normalMapLoadButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.normalMapLoadButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.normalMapLoadButton.Enabled = false;
+            this.normalMapLoadButton.Location = new System.Drawing.Point(110, 53);
+            this.normalMapLoadButton.Name = "normalMapLoadButton";
+            this.normalMapLoadButton.Size = new System.Drawing.Size(137, 34);
+            this.normalMapLoadButton.TabIndex = 2;
+            this.normalMapLoadButton.Text = "Load normal map";
+            this.normalMapLoadButton.UseVisualStyleBackColor = true;
+            this.normalMapLoadButton.Click += new System.EventHandler(this.normalMapLoadButton_Click);
+            // 
+            // normalMapTxtBox
+            // 
+            this.normalMapTxtBox.BackColor = System.Drawing.SystemColors.Control;
+            this.normalMapTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.normalMapTxtBox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.normalMapTxtBox.Enabled = false;
+            this.normalMapTxtBox.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.normalMapTxtBox.Location = new System.Drawing.Point(3, 53);
+            this.normalMapTxtBox.Name = "normalMapTxtBox";
+            this.normalMapTxtBox.Size = new System.Drawing.Size(101, 32);
+            this.normalMapTxtBox.TabIndex = 1;
+            this.normalMapTxtBox.Text = "No file";
+            this.normalMapTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // modifyNormalsCbutton
+            // 
+            this.modifyNormalsCbutton.Appearance = System.Windows.Forms.Appearance.Button;
+            this.modifyNormalsCbutton.AutoSize = true;
+            this.modifyNormalsCbutton.Dock = System.Windows.Forms.DockStyle.Top;
+            this.modifyNormalsCbutton.Location = new System.Drawing.Point(3, 23);
+            this.modifyNormalsCbutton.Name = "modifyNormalsCbutton";
+            this.modifyNormalsCbutton.Size = new System.Drawing.Size(244, 30);
+            this.modifyNormalsCbutton.TabIndex = 0;
+            this.modifyNormalsCbutton.Text = "Modify normals";
+            this.modifyNormalsCbutton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.modifyNormalsCbutton.UseVisualStyleBackColor = true;
+            this.modifyNormalsCbutton.CheckedChanged += new System.EventHandler(this.modifyNormalsCbutton_CheckedChanged);
+            // 
             // objectColorGbox
             // 
             this.objectColorGbox.AutoSize = true;
@@ -187,7 +275,7 @@
             this.objectColorGbox.Controls.Add(this.tableLayoutPanel1);
             this.objectColorGbox.Controls.Add(this.objectColorLoadDefaultButton);
             this.objectColorGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.objectColorGbox.Location = new System.Drawing.Point(0, 540);
+            this.objectColorGbox.Location = new System.Drawing.Point(0, 444);
             this.objectColorGbox.Name = "objectColorGbox";
             this.objectColorGbox.Size = new System.Drawing.Size(257, 181);
             this.objectColorGbox.TabIndex = 10;
@@ -294,16 +382,16 @@
             // objectColorTextureTxtBox
             // 
             this.objectColorTextureTxtBox.BackColor = System.Drawing.SystemColors.Control;
-            this.objectColorTextureTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.objectColorTextureTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.objectColorTextureTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.objectColorTextureTxtBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.objectColorTextureTxtBox.Enabled = false;
-            this.objectColorTextureTxtBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorTextureTxtBox.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.objectColorTextureTxtBox.Location = new System.Drawing.Point(128, 42);
-            this.objectColorTextureTxtBox.MaximumSize = new System.Drawing.Size(120, 40);
-            this.objectColorTextureTxtBox.MinimumSize = new System.Drawing.Size(120, 40);
+            this.objectColorTextureTxtBox.Multiline = true;
             this.objectColorTextureTxtBox.Name = "objectColorTextureTxtBox";
             this.objectColorTextureTxtBox.Size = new System.Drawing.Size(120, 40);
             this.objectColorTextureTxtBox.TabIndex = 8;
+            this.objectColorTextureTxtBox.Text = "No file ";
             this.objectColorTextureTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // objectColorLoadDefaultButton
@@ -326,7 +414,7 @@
             this.lightSourceGbox.Controls.Add(this.lightSourceAltitudeGbox);
             this.lightSourceGbox.Controls.Add(this.lightSourceColorGbox);
             this.lightSourceGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightSourceGbox.Location = new System.Drawing.Point(0, 365);
+            this.lightSourceGbox.Location = new System.Drawing.Point(0, 269);
             this.lightSourceGbox.Name = "lightSourceGbox";
             this.lightSourceGbox.Size = new System.Drawing.Size(257, 175);
             this.lightSourceGbox.TabIndex = 1;
@@ -422,7 +510,7 @@
             this.coefficientsGbox.Controls.Add(this.ksGbox);
             this.coefficientsGbox.Controls.Add(this.kdGbox);
             this.coefficientsGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.coefficientsGbox.Location = new System.Drawing.Point(0, 96);
+            this.coefficientsGbox.Location = new System.Drawing.Point(0, 0);
             this.coefficientsGbox.Name = "coefficientsGbox";
             this.coefficientsGbox.Size = new System.Drawing.Size(257, 269);
             this.coefficientsGbox.TabIndex = 8;
@@ -553,49 +641,6 @@
             this.kdTxtBox.Text = "0.500";
             this.kdTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // colorDeterminationMethodGbox
-            // 
-            this.colorDeterminationMethodGbox.AutoSize = true;
-            this.colorDeterminationMethodGbox.Controls.Add(this.vertexInterpolationRbutton);
-            this.colorDeterminationMethodGbox.Controls.Add(this.calcAtPointRbutton);
-            this.colorDeterminationMethodGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.colorDeterminationMethodGbox.Location = new System.Drawing.Point(0, 0);
-            this.colorDeterminationMethodGbox.Name = "colorDeterminationMethodGbox";
-            this.colorDeterminationMethodGbox.Size = new System.Drawing.Size(257, 96);
-            this.colorDeterminationMethodGbox.TabIndex = 7;
-            this.colorDeterminationMethodGbox.TabStop = false;
-            this.colorDeterminationMethodGbox.Text = "Color determination method";
-            // 
-            // vertexInterpolationRbutton
-            // 
-            this.vertexInterpolationRbutton.Appearance = System.Windows.Forms.Appearance.Button;
-            this.vertexInterpolationRbutton.AutoSize = true;
-            this.vertexInterpolationRbutton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.vertexInterpolationRbutton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.vertexInterpolationRbutton.Location = new System.Drawing.Point(3, 58);
-            this.vertexInterpolationRbutton.Name = "vertexInterpolationRbutton";
-            this.vertexInterpolationRbutton.Size = new System.Drawing.Size(251, 35);
-            this.vertexInterpolationRbutton.TabIndex = 1;
-            this.vertexInterpolationRbutton.Text = "Vertex interpolation";
-            this.vertexInterpolationRbutton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.vertexInterpolationRbutton.UseVisualStyleBackColor = true;
-            // 
-            // calcAtPointRbutton
-            // 
-            this.calcAtPointRbutton.Appearance = System.Windows.Forms.Appearance.Button;
-            this.calcAtPointRbutton.AutoSize = true;
-            this.calcAtPointRbutton.Checked = true;
-            this.calcAtPointRbutton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.calcAtPointRbutton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.calcAtPointRbutton.Location = new System.Drawing.Point(3, 23);
-            this.calcAtPointRbutton.Name = "calcAtPointRbutton";
-            this.calcAtPointRbutton.Size = new System.Drawing.Size(251, 35);
-            this.calcAtPointRbutton.TabIndex = 0;
-            this.calcAtPointRbutton.TabStop = true;
-            this.calcAtPointRbutton.Text = "Calculated at point";
-            this.calcAtPointRbutton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.calcAtPointRbutton.UseVisualStyleBackColor = true;
-            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -620,6 +665,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
+            this.normalsGbox.ResumeLayout(false);
+            this.normalsGbox.PerformLayout();
             this.objectColorGbox.ResumeLayout(false);
             this.objectColorGbox.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -643,8 +690,6 @@
             this.kdGbox.ResumeLayout(false);
             this.kdGbox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kdTrackBar)).EndInit();
-            this.colorDeterminationMethodGbox.ResumeLayout(false);
-            this.colorDeterminationMethodGbox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -657,9 +702,6 @@
         private ToolStripMenuItem loadobjFileToolStripMenuItem;
         private SplitContainer splitContainer1;
         private PictureBox canvas;
-        private GroupBox colorDeterminationMethodGbox;
-        private RadioButton vertexInterpolationRbutton;
-        private RadioButton calcAtPointRbutton;
         private GroupBox coefficientsGbox;
         private TrackBar kdTrackBar;
         private TextBox mTxtBox;
@@ -689,5 +731,12 @@
         private RadioButton objectColorTextureModeRbutton;
         private RadioButton objectColorSolidModeRbutton;
         private TextBox objectColorTextureTxtBox;
+        private ToolStripMenuItem colorDeterminationMethodToolStripMenuItem;
+        private ToolStripMenuItem calculatedAtPointToolStripMenuItem;
+        private ToolStripMenuItem vetrexInterpolationToolStripMenuItem;
+        private GroupBox normalsGbox;
+        private Button normalMapLoadButton;
+        private TextBox normalMapTxtBox;
+        private CheckBox modifyNormalsCbutton;
     }
 }

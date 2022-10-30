@@ -17,7 +17,7 @@ namespace GK1_PROJ2
         private float maxY;
         private float maxZ;
         private Bitmap drawArea;
-        private static Color canvasColor = Color.HotPink;
+        private Color canvasColor;
         private static Brush blackBrush = Brushes.Black;
         private const int pointRadious = 4;
         private static Pen edgePen = new Pen(blackBrush, 2);
@@ -26,6 +26,7 @@ namespace GK1_PROJ2
         private const int kMax = 0;
         private const int mMin = 1;
         private const int mMax = 100;
+        //Image image;
 
         public mainWindow()
         {
@@ -33,7 +34,10 @@ namespace GK1_PROJ2
             vertices = new List<Vertex>();
             polygons = new List<Polygon>();
             normals = new List<Vector>();
+            canvasColor = Color.HotPink;
             drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
+            //image = Image.FromFile(System.IO.Path.GetFullPath(@"..\..\..\") + @"\defaultObjectColor.jpg");
+            //drawArea = new Bitmap(image, new Size(canvas.Width, canvas.Height));
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
                 g.Clear(canvasColor);
@@ -194,6 +198,10 @@ namespace GK1_PROJ2
         {
             using (Graphics g = Graphics.FromImage(drawArea))
             {
+                if (objectColorSolidModeRbutton.Checked)
+                {
+                    canvasColor = objectColorSolidTxtBox.BackColor;
+                }
                 g.Clear(canvasColor);
 
                 foreach (var p in polygons)
@@ -281,6 +289,7 @@ namespace GK1_PROJ2
         {
             objectColorSolidModeRbutton.Checked = false;
             objectColorTextureModeRbutton.Checked = false;
+            repaint();
         }
         private void objectColorSolidModeRbutton_CheckedChanged(object sender, EventArgs e)
         {
@@ -289,6 +298,7 @@ namespace GK1_PROJ2
                 objectColorSolidChangeButton.Enabled = true;
             else
                 objectColorSolidChangeButton.Enabled = false;
+            repaint();
         }
         private void objectColorTextureModeRbutton_CheckedChanged(object sender, EventArgs e)
         {
@@ -297,6 +307,7 @@ namespace GK1_PROJ2
                 objectColorTextureLoadButton.Enabled = true;
             else
                 objectColorTextureLoadButton.Enabled = false;
+            repaint();
         }
         private void objectColorSolidChangeButton_Click(object sender, EventArgs e)
         {
@@ -305,14 +316,16 @@ namespace GK1_PROJ2
                 colorDialog.AllowFullOpen = true;
                 colorDialog.Color = lightSourceColorPreview.BackColor;
                 if (colorDialog.ShowDialog() == DialogResult.OK)
+                {
                     objectColorSolidTxtBox.BackColor = colorDialog.Color;
+                    repaint();
+                }  
             }
         }
         private void objectColorTextureLoadButton_Click(object sender, EventArgs e)
         {
             using (var dialog = new OpenFileDialog())
             {
-                //dialog.Filter = "Wavefront .obj file|*.obj";
                 dialog.Title = "Load texture";
 
                 if (dialog.ShowDialog() == DialogResult.OK)
@@ -320,6 +333,36 @@ namespace GK1_PROJ2
                     var separated = dialog.FileName.Split("\\");
                     var last = separated[separated.Length - 1];
                     objectColorTextureTxtBox.Text = last;
+                }
+            }
+        }
+        private void calculatedAtPointToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            vetrexInterpolationToolStripMenuItem.Checked = false;
+        }
+        private void vetrexInterpolationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            calculatedAtPointToolStripMenuItem.Checked = false;
+        }
+        private void modifyNormalsCbutton_CheckedChanged(object sender, EventArgs e)
+        {
+            var casted = (CheckBox)sender;
+            if (casted.Checked)
+                normalMapLoadButton.Enabled = true;
+            else
+                normalMapLoadButton.Enabled = false;
+        }
+        private void normalMapLoadButton_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new OpenFileDialog())
+            {
+                dialog.Title = "Load normal map";
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    var separated = dialog.FileName.Split("\\");
+                    var last = separated[separated.Length - 1];
+                    normalMapTxtBox.Text = last;
                 }
             }
         }
