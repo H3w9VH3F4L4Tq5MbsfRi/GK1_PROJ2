@@ -197,9 +197,9 @@ namespace GK1_PROJ2
                 foreach (var p in polygons)
                     for (int i = 0; i < p.verticies.Count; i++)
                     {
-                        if (showVerticiesCbox.Checked)
+                        if (showVerticiesToolStripMenuItem.Checked)
                             paintPoint(g, p.verticies[i].x, p.verticies[i].y, blackBrush);
-                        if (showEdgesCbox.Checked)
+                        if (showEdgesToolStripMenuItem.Checked)
                         {
                             int inext = (i + 1 == p.verticies.Count) ? 0 : i + 1;
                             PointF start = new PointF(p.verticies[i].x, p.verticies[i].y);
@@ -213,10 +213,6 @@ namespace GK1_PROJ2
         private void paintPoint(Graphics g, float x, float y, Brush color, int rad = pointRadious)
         {
             g.FillEllipse(color, x - rad, y - rad, rad * 2, rad * 2);
-        }
-        private void showCbox_CheckedChanged(object sender, EventArgs e)
-        {
-            repaint();
         }
         private void clean()
         {
@@ -253,6 +249,10 @@ namespace GK1_PROJ2
             colorDialog.Color = lightColorPreview.BackColor;
             if (colorDialog.ShowDialog() == DialogResult.OK)
                 lightColorPreview.BackColor = colorDialog.Color;
+        }
+        private void showToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            repaint();
         }
         //private void kdTxtBox_TextChanged(object sender, EventArgs e)
         //{

@@ -32,6 +32,9 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.clearCanvasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadobjFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.visibilityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showVerticiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showEdgesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.canvas = new System.Windows.Forms.PictureBox();
             this.lightColorGbox = new System.Windows.Forms.GroupBox();
@@ -50,9 +53,6 @@
             this.colorDeterminationMethodGbox = new System.Windows.Forms.GroupBox();
             this.vertexInterpolationRbutton = new System.Windows.Forms.RadioButton();
             this.calcAtPointRbutton = new System.Windows.Forms.RadioButton();
-            this.showGbox = new System.Windows.Forms.GroupBox();
-            this.showVerticiesCbox = new System.Windows.Forms.CheckBox();
-            this.showEdgesCbox = new System.Windows.Forms.CheckBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -70,7 +70,6 @@
             this.kdGbox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kdTrackBar)).BeginInit();
             this.colorDeterminationMethodGbox.SuspendLayout();
-            this.showGbox.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -79,7 +78,8 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearCanvasToolStripMenuItem,
-            this.loadobjFileToolStripMenuItem});
+            this.loadobjFileToolStripMenuItem,
+            this.visibilityToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 3, 0, 3);
@@ -101,6 +101,36 @@
             this.loadobjFileToolStripMenuItem.Text = "Load .obj file ";
             this.loadobjFileToolStripMenuItem.Click += new System.EventHandler(this.loadobjFileToolStripMenuItem_Click);
             // 
+            // visibilityToolStripMenuItem
+            // 
+            this.visibilityToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showVerticiesToolStripMenuItem,
+            this.showEdgesToolStripMenuItem});
+            this.visibilityToolStripMenuItem.Name = "visibilityToolStripMenuItem";
+            this.visibilityToolStripMenuItem.Size = new System.Drawing.Size(79, 24);
+            this.visibilityToolStripMenuItem.Text = "Visibility";
+            // 
+            // showVerticiesToolStripMenuItem
+            // 
+            this.showVerticiesToolStripMenuItem.Checked = true;
+            this.showVerticiesToolStripMenuItem.CheckOnClick = true;
+            this.showVerticiesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showVerticiesToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.showVerticiesToolStripMenuItem.Name = "showVerticiesToolStripMenuItem";
+            this.showVerticiesToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            this.showVerticiesToolStripMenuItem.Text = "Show verticies";
+            this.showVerticiesToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showToolStripMenuItem_CheckedChanged);
+            // 
+            // showEdgesToolStripMenuItem
+            // 
+            this.showEdgesToolStripMenuItem.Checked = true;
+            this.showEdgesToolStripMenuItem.CheckOnClick = true;
+            this.showEdgesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showEdgesToolStripMenuItem.Name = "showEdgesToolStripMenuItem";
+            this.showEdgesToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            this.showEdgesToolStripMenuItem.Text = "Show edges";
+            this.showEdgesToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showToolStripMenuItem_CheckedChanged);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -118,7 +148,6 @@
             this.splitContainer1.Panel2.Controls.Add(this.lightColorGbox);
             this.splitContainer1.Panel2.Controls.Add(this.coefficientsGbox);
             this.splitContainer1.Panel2.Controls.Add(this.colorDeterminationMethodGbox);
-            this.splitContainer1.Panel2.Controls.Add(this.showGbox);
             this.splitContainer1.Size = new System.Drawing.Size(982, 721);
             this.splitContainer1.SplitterDistance = 721;
             this.splitContainer1.TabIndex = 1;
@@ -137,7 +166,7 @@
             this.lightColorGbox.Controls.Add(this.changeColorButton);
             this.lightColorGbox.Controls.Add(this.lightColorPreview);
             this.lightColorGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightColorGbox.Location = new System.Drawing.Point(0, 516);
+            this.lightColorGbox.Location = new System.Drawing.Point(0, 406);
             this.lightColorGbox.Name = "lightColorGbox";
             this.lightColorGbox.Size = new System.Drawing.Size(257, 70);
             this.lightColorGbox.TabIndex = 1;
@@ -178,7 +207,7 @@
             this.coefficientsGbox.Controls.Add(this.ksGbox);
             this.coefficientsGbox.Controls.Add(this.kdGbox);
             this.coefficientsGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.coefficientsGbox.Location = new System.Drawing.Point(0, 215);
+            this.coefficientsGbox.Location = new System.Drawing.Point(0, 105);
             this.coefficientsGbox.Name = "coefficientsGbox";
             this.coefficientsGbox.Size = new System.Drawing.Size(257, 301);
             this.coefficientsGbox.TabIndex = 8;
@@ -310,7 +339,7 @@
             this.colorDeterminationMethodGbox.Controls.Add(this.vertexInterpolationRbutton);
             this.colorDeterminationMethodGbox.Controls.Add(this.calcAtPointRbutton);
             this.colorDeterminationMethodGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.colorDeterminationMethodGbox.Location = new System.Drawing.Point(0, 110);
+            this.colorDeterminationMethodGbox.Location = new System.Drawing.Point(0, 0);
             this.colorDeterminationMethodGbox.Name = "colorDeterminationMethodGbox";
             this.colorDeterminationMethodGbox.Size = new System.Drawing.Size(257, 105);
             this.colorDeterminationMethodGbox.TabIndex = 7;
@@ -347,53 +376,6 @@
             this.calcAtPointRbutton.Text = "Calculated at point";
             this.calcAtPointRbutton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.calcAtPointRbutton.UseVisualStyleBackColor = true;
-            // 
-            // showGbox
-            // 
-            this.showGbox.AutoSize = true;
-            this.showGbox.Controls.Add(this.showVerticiesCbox);
-            this.showGbox.Controls.Add(this.showEdgesCbox);
-            this.showGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.showGbox.Location = new System.Drawing.Point(0, 0);
-            this.showGbox.Name = "showGbox";
-            this.showGbox.Size = new System.Drawing.Size(257, 110);
-            this.showGbox.TabIndex = 6;
-            this.showGbox.TabStop = false;
-            this.showGbox.Text = "Visibility";
-            // 
-            // showVerticiesCbox
-            // 
-            this.showVerticiesCbox.Appearance = System.Windows.Forms.Appearance.Button;
-            this.showVerticiesCbox.AutoSize = true;
-            this.showVerticiesCbox.Checked = true;
-            this.showVerticiesCbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showVerticiesCbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.showVerticiesCbox.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.showVerticiesCbox.Location = new System.Drawing.Point(3, 65);
-            this.showVerticiesCbox.Name = "showVerticiesCbox";
-            this.showVerticiesCbox.Size = new System.Drawing.Size(251, 42);
-            this.showVerticiesCbox.TabIndex = 4;
-            this.showVerticiesCbox.Text = "Show verticies";
-            this.showVerticiesCbox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.showVerticiesCbox.UseVisualStyleBackColor = true;
-            this.showVerticiesCbox.CheckedChanged += new System.EventHandler(this.showCbox_CheckedChanged);
-            // 
-            // showEdgesCbox
-            // 
-            this.showEdgesCbox.Appearance = System.Windows.Forms.Appearance.Button;
-            this.showEdgesCbox.AutoSize = true;
-            this.showEdgesCbox.Checked = true;
-            this.showEdgesCbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showEdgesCbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.showEdgesCbox.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.showEdgesCbox.Location = new System.Drawing.Point(3, 23);
-            this.showEdgesCbox.Name = "showEdgesCbox";
-            this.showEdgesCbox.Size = new System.Drawing.Size(251, 42);
-            this.showEdgesCbox.TabIndex = 5;
-            this.showEdgesCbox.Text = "Show edges";
-            this.showEdgesCbox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.showEdgesCbox.UseVisualStyleBackColor = true;
-            this.showEdgesCbox.CheckedChanged += new System.EventHandler(this.showCbox_CheckedChanged);
             // 
             // mainWindow
             // 
@@ -434,8 +416,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.kdTrackBar)).EndInit();
             this.colorDeterminationMethodGbox.ResumeLayout(false);
             this.colorDeterminationMethodGbox.PerformLayout();
-            this.showGbox.ResumeLayout(false);
-            this.showGbox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -448,9 +428,6 @@
         private ToolStripMenuItem loadobjFileToolStripMenuItem;
         private SplitContainer splitContainer1;
         private PictureBox canvas;
-        private CheckBox showVerticiesCbox;
-        private CheckBox showEdgesCbox;
-        private GroupBox showGbox;
         private GroupBox colorDeterminationMethodGbox;
         private RadioButton vertexInterpolationRbutton;
         private RadioButton calcAtPointRbutton;
@@ -468,5 +445,8 @@
         private Button changeColorButton;
         private PictureBox lightColorPreview;
         private ColorDialog colorDialog1;
+        private ToolStripMenuItem visibilityToolStripMenuItem;
+        private ToolStripMenuItem showVerticiesToolStripMenuItem;
+        private ToolStripMenuItem showEdgesToolStripMenuItem;
     }
 }
