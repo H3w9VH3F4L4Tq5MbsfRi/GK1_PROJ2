@@ -26,6 +26,7 @@ namespace GK1_PROJ2
         private const int kMax = 0;
         private const int mMin = 1;
         private const int mMax = 100;
+
         public mainWindow()
         {
             InitializeComponent();
@@ -36,6 +37,7 @@ namespace GK1_PROJ2
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
                 g.Clear(canvasColor);
+            recalcSliders();
         }
         private void clearCanvasToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -244,34 +246,83 @@ namespace GK1_PROJ2
         }
         private void changeColorButton_Click(object sender, EventArgs e)
         {
-            ColorDialog colorDialog = new ColorDialog();
-            colorDialog.AllowFullOpen = true;
-            colorDialog.Color = lightColorPreview.BackColor;
-            if (colorDialog.ShowDialog() == DialogResult.OK)
-                lightColorPreview.BackColor = colorDialog.Color;
+            using (ColorDialog colorDialog = new ColorDialog())
+            {
+                colorDialog.AllowFullOpen = true;
+                colorDialog.Color = lightSourceColorPreview.BackColor;
+                if (colorDialog.ShowDialog() == DialogResult.OK)
+                    lightSourceColorPreview.BackColor = colorDialog.Color;
+            }
         }
         private void showToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             repaint();
         }
-        //private void kdTxtBox_TextChanged(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        double val = double.Parse(kdTxtBox.Text);
-        //        if (val < kMin || val > kMax)
-        //            throw new Exception();
-        //        Int32 value = (Int32)(val * 1000);
-        //        kdTxtBox.Text = val.ToString("0.000");
-        //    }
-        //    catch
-        //    {
-        //        MessageBox.Show("Provided invalid value", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        double val = kdTrackBar.Value;
-        //        val /= 1000;
-        //        kdTxtBox.Text = val.ToString("0.000");
-        //    }
-        //}
+        private void recalcSliders()
+        {
+            this.lightSourceAltitudeTrackBar.Maximum = this.canvas.Height * 1000;
+            this.lightSourceAltitudeTrackBar.Value = (this.lightSourceAltitudeTrackBar.Maximum - this.lightSourceAltitudeTrackBar.Minimum) / 2 + this.lightSourceAltitudeTrackBar.Minimum;
+            this.lightSourceAltitudeTxtBox.Text = (((double)(this.lightSourceAltitudeTrackBar.Maximum - this.lightSourceAltitudeTrackBar.Minimum) / 2 + this.lightSourceAltitudeTrackBar.Minimum) / 1000).ToString("0.000");
+            this.mTrackBar.Value = (this.mTrackBar.Maximum - this.mTrackBar.Minimum) / 2 + this.mTrackBar.Minimum;
+            this.mTxtBox.Text = (((double)(this.mTrackBar.Maximum - this.mTrackBar.Minimum) / 2 + this.mTrackBar.Minimum) / 1000).ToString("0.000");
+            this.ksTrackBar.Value = (this.ksTrackBar.Maximum - this.ksTrackBar.Minimum) / 2 + this.ksTrackBar.Minimum;
+            this.ksTxtBox.Text = (((double)(this.ksTrackBar.Maximum - this.ksTrackBar.Minimum) / 2 + this.ksTrackBar.Minimum) / 1000).ToString("0.000");
+            this.kdTrackBar.Value = (this.kdTrackBar.Maximum - this.kdTrackBar.Minimum) / 2 + this.kdTrackBar.Minimum;
+            this.kdTxtBox.Text = (((double)(this.kdTrackBar.Maximum - this.kdTrackBar.Minimum) / 2 + this.kdTrackBar.Minimum) / 1000).ToString("0.000");
+
+        }
+        private void lightSourceAltitudeTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            double val = lightSourceAltitudeTrackBar.Value;
+            val /= 1000;
+            lightSourceAltitudeTxtBox.Text = val.ToString("0.000");
+        }
+        private void objectColorLoadDefaultButton_Click(object sender, EventArgs e)
+        {
+            objectColorSolidModeRbutton.Checked = false;
+            objectColorTextureModeRbutton.Checked = false;
+        }
+        private void objectColorSolidModeRbutton_CheckedChanged(object sender, EventArgs e)
+        {
+            var casted = (RadioButton)sender;
+            if (casted.Checked)
+                objectColorSolidChangeButton.Enabled = true;
+            else
+                objectColorSolidChangeButton.Enabled = false;
+        }
+        private void objectColorTextureModeRbutton_CheckedChanged(object sender, EventArgs e)
+        {
+            var casted = (RadioButton)sender;
+            if (casted.Checked)
+                objectColorTextureLoadButton.Enabled = true;
+            else
+                objectColorTextureLoadButton.Enabled = false;
+        }
+        private void objectColorSolidChangeButton_Click(object sender, EventArgs e)
+        {
+            using (ColorDialog colorDialog = new ColorDialog())
+            {
+                colorDialog.AllowFullOpen = true;
+                colorDialog.Color = lightSourceColorPreview.BackColor;
+                if (colorDialog.ShowDialog() == DialogResult.OK)
+                    objectColorSolidTxtBox.BackColor = colorDialog.Color;
+            }
+        }
+        private void objectColorTextureLoadButton_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new OpenFileDialog())
+            {
+                //dialog.Filter = "Wavefront .obj file|*.obj";
+                dialog.Title = "Load texture";
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    var separated = dialog.FileName.Split("\\");
+                    var last = separated[separated.Length - 1];
+                    objectColorTextureTxtBox.Text = last;
+                }
+            }
+        }
     }
     public class Vertex
     {

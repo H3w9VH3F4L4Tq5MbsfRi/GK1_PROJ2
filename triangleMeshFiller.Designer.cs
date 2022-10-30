@@ -37,9 +37,22 @@
             this.showEdgesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.canvas = new System.Windows.Forms.PictureBox();
-            this.lightColorGbox = new System.Windows.Forms.GroupBox();
-            this.changeColorButton = new System.Windows.Forms.Button();
-            this.lightColorPreview = new System.Windows.Forms.PictureBox();
+            this.objectColorGbox = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.objectColorTextureModeRbutton = new System.Windows.Forms.RadioButton();
+            this.objectColorSolidChangeButton = new System.Windows.Forms.Button();
+            this.objectColorSolidTxtBox = new System.Windows.Forms.PictureBox();
+            this.objectColorSolidModeRbutton = new System.Windows.Forms.RadioButton();
+            this.objectColorTextureLoadButton = new System.Windows.Forms.Button();
+            this.objectColorTextureTxtBox = new System.Windows.Forms.TextBox();
+            this.objectColorLoadDefaultButton = new System.Windows.Forms.Button();
+            this.lightSourceGbox = new System.Windows.Forms.GroupBox();
+            this.lightSourceAltitudeGbox = new System.Windows.Forms.GroupBox();
+            this.lightSourceAltitudeTrackBar = new System.Windows.Forms.TrackBar();
+            this.lightSourceAltitudeTxtBox = new System.Windows.Forms.TextBox();
+            this.lightSourceColorGbox = new System.Windows.Forms.GroupBox();
+            this.lightSourceColorPreview = new System.Windows.Forms.PictureBox();
+            this.lightSourceChangeColorButton = new System.Windows.Forms.Button();
             this.coefficientsGbox = new System.Windows.Forms.GroupBox();
             this.mGbox = new System.Windows.Forms.GroupBox();
             this.mTrackBar = new System.Windows.Forms.TrackBar();
@@ -53,15 +66,20 @@
             this.colorDeterminationMethodGbox = new System.Windows.Forms.GroupBox();
             this.vertexInterpolationRbutton = new System.Windows.Forms.RadioButton();
             this.calcAtPointRbutton = new System.Windows.Forms.RadioButton();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
-            this.lightColorGbox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lightColorPreview)).BeginInit();
+            this.objectColorGbox.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objectColorSolidTxtBox)).BeginInit();
+            this.lightSourceGbox.SuspendLayout();
+            this.lightSourceAltitudeGbox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lightSourceAltitudeTrackBar)).BeginInit();
+            this.lightSourceColorGbox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lightSourceColorPreview)).BeginInit();
             this.coefficientsGbox.SuspendLayout();
             this.mGbox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mTrackBar)).BeginInit();
@@ -145,7 +163,8 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.lightColorGbox);
+            this.splitContainer1.Panel2.Controls.Add(this.objectColorGbox);
+            this.splitContainer1.Panel2.Controls.Add(this.lightSourceGbox);
             this.splitContainer1.Panel2.Controls.Add(this.coefficientsGbox);
             this.splitContainer1.Panel2.Controls.Add(this.colorDeterminationMethodGbox);
             this.splitContainer1.Size = new System.Drawing.Size(982, 721);
@@ -161,44 +180,240 @@
             this.canvas.TabIndex = 0;
             this.canvas.TabStop = false;
             // 
-            // lightColorGbox
+            // objectColorGbox
             // 
-            this.lightColorGbox.Controls.Add(this.changeColorButton);
-            this.lightColorGbox.Controls.Add(this.lightColorPreview);
-            this.lightColorGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightColorGbox.Location = new System.Drawing.Point(0, 406);
-            this.lightColorGbox.Name = "lightColorGbox";
-            this.lightColorGbox.Size = new System.Drawing.Size(257, 70);
-            this.lightColorGbox.TabIndex = 1;
-            this.lightColorGbox.TabStop = false;
-            this.lightColorGbox.Text = "Color of light";
+            this.objectColorGbox.AutoSize = true;
+            this.objectColorGbox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.objectColorGbox.Controls.Add(this.tableLayoutPanel1);
+            this.objectColorGbox.Controls.Add(this.objectColorLoadDefaultButton);
+            this.objectColorGbox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.objectColorGbox.Location = new System.Drawing.Point(0, 540);
+            this.objectColorGbox.Name = "objectColorGbox";
+            this.objectColorGbox.Size = new System.Drawing.Size(257, 181);
+            this.objectColorGbox.TabIndex = 10;
+            this.objectColorGbox.TabStop = false;
+            this.objectColorGbox.Text = "Color of the object";
             // 
-            // changeColorButton
+            // tableLayoutPanel1
             // 
-            this.changeColorButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.changeColorButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.changeColorButton.Location = new System.Drawing.Point(84, 23);
-            this.changeColorButton.MaximumSize = new System.Drawing.Size(170, 40);
-            this.changeColorButton.MinimumSize = new System.Drawing.Size(170, 40);
-            this.changeColorButton.Name = "changeColorButton";
-            this.changeColorButton.Size = new System.Drawing.Size(170, 40);
-            this.changeColorButton.TabIndex = 1;
-            this.changeColorButton.Text = "Change color";
-            this.changeColorButton.UseVisualStyleBackColor = true;
-            this.changeColorButton.Click += new System.EventHandler(this.changeColorButton_Click);
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.objectColorTextureModeRbutton, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.objectColorSolidChangeButton, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.objectColorSolidTxtBox, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.objectColorSolidModeRbutton, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.objectColorTextureLoadButton, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.objectColorTextureTxtBox, 1, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 56);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(251, 122);
+            this.tableLayoutPanel1.TabIndex = 8;
             // 
-            // lightColorPreview
+            // objectColorTextureModeRbutton
             // 
-            this.lightColorPreview.BackColor = System.Drawing.Color.White;
-            this.lightColorPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lightColorPreview.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lightColorPreview.Location = new System.Drawing.Point(3, 23);
-            this.lightColorPreview.MaximumSize = new System.Drawing.Size(80, 40);
-            this.lightColorPreview.MinimumSize = new System.Drawing.Size(80, 40);
-            this.lightColorPreview.Name = "lightColorPreview";
-            this.lightColorPreview.Size = new System.Drawing.Size(80, 40);
-            this.lightColorPreview.TabIndex = 0;
-            this.lightColorPreview.TabStop = false;
+            this.objectColorTextureModeRbutton.Appearance = System.Windows.Forms.Appearance.Button;
+            this.objectColorTextureModeRbutton.AutoSize = true;
+            this.objectColorTextureModeRbutton.Dock = System.Windows.Forms.DockStyle.Top;
+            this.objectColorTextureModeRbutton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorTextureModeRbutton.Location = new System.Drawing.Point(128, 3);
+            this.objectColorTextureModeRbutton.Name = "objectColorTextureModeRbutton";
+            this.objectColorTextureModeRbutton.Size = new System.Drawing.Size(120, 33);
+            this.objectColorTextureModeRbutton.TabIndex = 7;
+            this.objectColorTextureModeRbutton.TabStop = true;
+            this.objectColorTextureModeRbutton.Text = "Texture";
+            this.objectColorTextureModeRbutton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.objectColorTextureModeRbutton.UseVisualStyleBackColor = true;
+            this.objectColorTextureModeRbutton.CheckedChanged += new System.EventHandler(this.objectColorTextureModeRbutton_CheckedChanged);
+            // 
+            // objectColorSolidChangeButton
+            // 
+            this.objectColorSolidChangeButton.AutoSize = true;
+            this.objectColorSolidChangeButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.objectColorSolidChangeButton.Dock = System.Windows.Forms.DockStyle.Top;
+            this.objectColorSolidChangeButton.Enabled = false;
+            this.objectColorSolidChangeButton.Font = new System.Drawing.Font("Segoe UI", 9.6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorSolidChangeButton.Location = new System.Drawing.Point(3, 88);
+            this.objectColorSolidChangeButton.Name = "objectColorSolidChangeButton";
+            this.objectColorSolidChangeButton.Size = new System.Drawing.Size(119, 31);
+            this.objectColorSolidChangeButton.TabIndex = 5;
+            this.objectColorSolidChangeButton.Text = "Change color";
+            this.objectColorSolidChangeButton.UseVisualStyleBackColor = true;
+            this.objectColorSolidChangeButton.Click += new System.EventHandler(this.objectColorSolidChangeButton_Click);
+            // 
+            // objectColorSolidTxtBox
+            // 
+            this.objectColorSolidTxtBox.BackColor = System.Drawing.Color.White;
+            this.objectColorSolidTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.objectColorSolidTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.objectColorSolidTxtBox.Enabled = false;
+            this.objectColorSolidTxtBox.Location = new System.Drawing.Point(3, 42);
+            this.objectColorSolidTxtBox.Name = "objectColorSolidTxtBox";
+            this.objectColorSolidTxtBox.Size = new System.Drawing.Size(119, 40);
+            this.objectColorSolidTxtBox.TabIndex = 2;
+            this.objectColorSolidTxtBox.TabStop = false;
+            // 
+            // objectColorSolidModeRbutton
+            // 
+            this.objectColorSolidModeRbutton.Appearance = System.Windows.Forms.Appearance.Button;
+            this.objectColorSolidModeRbutton.AutoSize = true;
+            this.objectColorSolidModeRbutton.Dock = System.Windows.Forms.DockStyle.Top;
+            this.objectColorSolidModeRbutton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorSolidModeRbutton.Location = new System.Drawing.Point(3, 3);
+            this.objectColorSolidModeRbutton.Name = "objectColorSolidModeRbutton";
+            this.objectColorSolidModeRbutton.Size = new System.Drawing.Size(119, 33);
+            this.objectColorSolidModeRbutton.TabIndex = 6;
+            this.objectColorSolidModeRbutton.TabStop = true;
+            this.objectColorSolidModeRbutton.Text = "Solid color";
+            this.objectColorSolidModeRbutton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.objectColorSolidModeRbutton.UseVisualStyleBackColor = true;
+            this.objectColorSolidModeRbutton.CheckedChanged += new System.EventHandler(this.objectColorSolidModeRbutton_CheckedChanged);
+            // 
+            // objectColorTextureLoadButton
+            // 
+            this.objectColorTextureLoadButton.AutoSize = true;
+            this.objectColorTextureLoadButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.objectColorTextureLoadButton.Dock = System.Windows.Forms.DockStyle.Top;
+            this.objectColorTextureLoadButton.Enabled = false;
+            this.objectColorTextureLoadButton.Font = new System.Drawing.Font("Segoe UI", 9.6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorTextureLoadButton.Location = new System.Drawing.Point(128, 88);
+            this.objectColorTextureLoadButton.Name = "objectColorTextureLoadButton";
+            this.objectColorTextureLoadButton.Size = new System.Drawing.Size(120, 31);
+            this.objectColorTextureLoadButton.TabIndex = 4;
+            this.objectColorTextureLoadButton.Text = "Load texture";
+            this.objectColorTextureLoadButton.UseVisualStyleBackColor = true;
+            this.objectColorTextureLoadButton.Click += new System.EventHandler(this.objectColorTextureLoadButton_Click);
+            // 
+            // objectColorTextureTxtBox
+            // 
+            this.objectColorTextureTxtBox.BackColor = System.Drawing.SystemColors.Control;
+            this.objectColorTextureTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.objectColorTextureTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.objectColorTextureTxtBox.Enabled = false;
+            this.objectColorTextureTxtBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorTextureTxtBox.Location = new System.Drawing.Point(128, 42);
+            this.objectColorTextureTxtBox.MaximumSize = new System.Drawing.Size(120, 40);
+            this.objectColorTextureTxtBox.MinimumSize = new System.Drawing.Size(120, 40);
+            this.objectColorTextureTxtBox.Name = "objectColorTextureTxtBox";
+            this.objectColorTextureTxtBox.Size = new System.Drawing.Size(120, 40);
+            this.objectColorTextureTxtBox.TabIndex = 8;
+            this.objectColorTextureTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // objectColorLoadDefaultButton
+            // 
+            this.objectColorLoadDefaultButton.AutoSize = true;
+            this.objectColorLoadDefaultButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.objectColorLoadDefaultButton.Dock = System.Windows.Forms.DockStyle.Top;
+            this.objectColorLoadDefaultButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorLoadDefaultButton.Location = new System.Drawing.Point(3, 23);
+            this.objectColorLoadDefaultButton.Name = "objectColorLoadDefaultButton";
+            this.objectColorLoadDefaultButton.Size = new System.Drawing.Size(251, 33);
+            this.objectColorLoadDefaultButton.TabIndex = 7;
+            this.objectColorLoadDefaultButton.Text = "Load default texture";
+            this.objectColorLoadDefaultButton.UseVisualStyleBackColor = true;
+            this.objectColorLoadDefaultButton.Click += new System.EventHandler(this.objectColorLoadDefaultButton_Click);
+            // 
+            // lightSourceGbox
+            // 
+            this.lightSourceGbox.AutoSize = true;
+            this.lightSourceGbox.Controls.Add(this.lightSourceAltitudeGbox);
+            this.lightSourceGbox.Controls.Add(this.lightSourceColorGbox);
+            this.lightSourceGbox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lightSourceGbox.Location = new System.Drawing.Point(0, 365);
+            this.lightSourceGbox.Name = "lightSourceGbox";
+            this.lightSourceGbox.Size = new System.Drawing.Size(257, 175);
+            this.lightSourceGbox.TabIndex = 1;
+            this.lightSourceGbox.TabStop = false;
+            this.lightSourceGbox.Text = "Light source";
+            // 
+            // lightSourceAltitudeGbox
+            // 
+            this.lightSourceAltitudeGbox.AutoSize = true;
+            this.lightSourceAltitudeGbox.Controls.Add(this.lightSourceAltitudeTrackBar);
+            this.lightSourceAltitudeGbox.Controls.Add(this.lightSourceAltitudeTxtBox);
+            this.lightSourceAltitudeGbox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lightSourceAltitudeGbox.Location = new System.Drawing.Point(3, 91);
+            this.lightSourceAltitudeGbox.Name = "lightSourceAltitudeGbox";
+            this.lightSourceAltitudeGbox.Size = new System.Drawing.Size(251, 81);
+            this.lightSourceAltitudeGbox.TabIndex = 6;
+            this.lightSourceAltitudeGbox.TabStop = false;
+            this.lightSourceAltitudeGbox.Text = "Altitude";
+            // 
+            // lightSourceAltitudeTrackBar
+            // 
+            this.lightSourceAltitudeTrackBar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lightSourceAltitudeTrackBar.Location = new System.Drawing.Point(3, 48);
+            this.lightSourceAltitudeTrackBar.Maximum = 721000;
+            this.lightSourceAltitudeTrackBar.MaximumSize = new System.Drawing.Size(0, 30);
+            this.lightSourceAltitudeTrackBar.Name = "lightSourceAltitudeTrackBar";
+            this.lightSourceAltitudeTrackBar.Size = new System.Drawing.Size(245, 30);
+            this.lightSourceAltitudeTrackBar.TabIndex = 0;
+            this.lightSourceAltitudeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.lightSourceAltitudeTrackBar.Value = 365500;
+            this.lightSourceAltitudeTrackBar.ValueChanged += new System.EventHandler(this.lightSourceAltitudeTrackBar_ValueChanged);
+            // 
+            // lightSourceAltitudeTxtBox
+            // 
+            this.lightSourceAltitudeTxtBox.BackColor = System.Drawing.SystemColors.Control;
+            this.lightSourceAltitudeTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lightSourceAltitudeTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lightSourceAltitudeTxtBox.Enabled = false;
+            this.lightSourceAltitudeTxtBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lightSourceAltitudeTxtBox.Location = new System.Drawing.Point(3, 23);
+            this.lightSourceAltitudeTxtBox.Name = "lightSourceAltitudeTxtBox";
+            this.lightSourceAltitudeTxtBox.ReadOnly = true;
+            this.lightSourceAltitudeTxtBox.Size = new System.Drawing.Size(245, 25);
+            this.lightSourceAltitudeTxtBox.TabIndex = 1;
+            this.lightSourceAltitudeTxtBox.Text = "365.500";
+            this.lightSourceAltitudeTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lightSourceColorGbox
+            // 
+            this.lightSourceColorGbox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.lightSourceColorGbox.Controls.Add(this.lightSourceColorPreview);
+            this.lightSourceColorGbox.Controls.Add(this.lightSourceChangeColorButton);
+            this.lightSourceColorGbox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lightSourceColorGbox.Location = new System.Drawing.Point(3, 23);
+            this.lightSourceColorGbox.Name = "lightSourceColorGbox";
+            this.lightSourceColorGbox.Size = new System.Drawing.Size(251, 68);
+            this.lightSourceColorGbox.TabIndex = 2;
+            this.lightSourceColorGbox.TabStop = false;
+            this.lightSourceColorGbox.Text = "Color";
+            // 
+            // lightSourceColorPreview
+            // 
+            this.lightSourceColorPreview.BackColor = System.Drawing.Color.White;
+            this.lightSourceColorPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lightSourceColorPreview.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lightSourceColorPreview.Enabled = false;
+            this.lightSourceColorPreview.Location = new System.Drawing.Point(3, 23);
+            this.lightSourceColorPreview.MaximumSize = new System.Drawing.Size(83, 40);
+            this.lightSourceColorPreview.MinimumSize = new System.Drawing.Size(83, 40);
+            this.lightSourceColorPreview.Name = "lightSourceColorPreview";
+            this.lightSourceColorPreview.Size = new System.Drawing.Size(83, 40);
+            this.lightSourceColorPreview.TabIndex = 0;
+            this.lightSourceColorPreview.TabStop = false;
+            // 
+            // lightSourceChangeColorButton
+            // 
+            this.lightSourceChangeColorButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.lightSourceChangeColorButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lightSourceChangeColorButton.Location = new System.Drawing.Point(88, 23);
+            this.lightSourceChangeColorButton.MaximumSize = new System.Drawing.Size(160, 40);
+            this.lightSourceChangeColorButton.MinimumSize = new System.Drawing.Size(160, 40);
+            this.lightSourceChangeColorButton.Name = "lightSourceChangeColorButton";
+            this.lightSourceChangeColorButton.Size = new System.Drawing.Size(160, 40);
+            this.lightSourceChangeColorButton.TabIndex = 1;
+            this.lightSourceChangeColorButton.Text = "Change color";
+            this.lightSourceChangeColorButton.UseVisualStyleBackColor = true;
+            this.lightSourceChangeColorButton.Click += new System.EventHandler(this.changeColorButton_Click);
             // 
             // coefficientsGbox
             // 
@@ -207,9 +422,9 @@
             this.coefficientsGbox.Controls.Add(this.ksGbox);
             this.coefficientsGbox.Controls.Add(this.kdGbox);
             this.coefficientsGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.coefficientsGbox.Location = new System.Drawing.Point(0, 105);
+            this.coefficientsGbox.Location = new System.Drawing.Point(0, 96);
             this.coefficientsGbox.Name = "coefficientsGbox";
-            this.coefficientsGbox.Size = new System.Drawing.Size(257, 301);
+            this.coefficientsGbox.Size = new System.Drawing.Size(257, 269);
             this.coefficientsGbox.TabIndex = 8;
             this.coefficientsGbox.TabStop = false;
             this.coefficientsGbox.Text = "Coefficients";
@@ -220,9 +435,9 @@
             this.mGbox.Controls.Add(this.mTrackBar);
             this.mGbox.Controls.Add(this.mTxtBox);
             this.mGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.mGbox.Location = new System.Drawing.Point(3, 215);
+            this.mGbox.Location = new System.Drawing.Point(3, 185);
             this.mGbox.Name = "mGbox";
-            this.mGbox.Size = new System.Drawing.Size(251, 83);
+            this.mGbox.Size = new System.Drawing.Size(251, 81);
             this.mGbox.TabIndex = 5;
             this.mGbox.TabStop = false;
             this.mGbox.Text = "m value";
@@ -230,7 +445,7 @@
             // mTrackBar
             // 
             this.mTrackBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.mTrackBar.Location = new System.Drawing.Point(3, 50);
+            this.mTrackBar.Location = new System.Drawing.Point(3, 48);
             this.mTrackBar.Maximum = 100000;
             this.mTrackBar.MaximumSize = new System.Drawing.Size(0, 30);
             this.mTrackBar.Minimum = 1000;
@@ -246,23 +461,25 @@
             this.mTxtBox.BackColor = System.Drawing.SystemColors.Control;
             this.mTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.mTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.mTxtBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mTxtBox.Enabled = false;
+            this.mTxtBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.mTxtBox.Location = new System.Drawing.Point(3, 23);
             this.mTxtBox.Name = "mTxtBox";
             this.mTxtBox.ReadOnly = true;
-            this.mTxtBox.Size = new System.Drawing.Size(245, 27);
+            this.mTxtBox.Size = new System.Drawing.Size(245, 25);
             this.mTxtBox.TabIndex = 1;
             this.mTxtBox.Text = "50.500";
             this.mTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // ksGbox
             // 
+            this.ksGbox.AutoSize = true;
             this.ksGbox.Controls.Add(this.ksTrackBar);
             this.ksGbox.Controls.Add(this.ksTxtBox);
             this.ksGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ksGbox.Location = new System.Drawing.Point(3, 119);
+            this.ksGbox.Location = new System.Drawing.Point(3, 104);
             this.ksGbox.Name = "ksGbox";
-            this.ksGbox.Size = new System.Drawing.Size(251, 96);
+            this.ksGbox.Size = new System.Drawing.Size(251, 81);
             this.ksGbox.TabIndex = 6;
             this.ksGbox.TabStop = false;
             this.ksGbox.Text = "ks value";
@@ -270,7 +487,7 @@
             // ksTrackBar
             // 
             this.ksTrackBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ksTrackBar.Location = new System.Drawing.Point(3, 50);
+            this.ksTrackBar.Location = new System.Drawing.Point(3, 48);
             this.ksTrackBar.Maximum = 1000;
             this.ksTrackBar.MaximumSize = new System.Drawing.Size(0, 30);
             this.ksTrackBar.Name = "ksTrackBar";
@@ -285,23 +502,25 @@
             this.ksTxtBox.BackColor = System.Drawing.SystemColors.Control;
             this.ksTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ksTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ksTxtBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ksTxtBox.Enabled = false;
+            this.ksTxtBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ksTxtBox.Location = new System.Drawing.Point(3, 23);
             this.ksTxtBox.Name = "ksTxtBox";
             this.ksTxtBox.ReadOnly = true;
-            this.ksTxtBox.Size = new System.Drawing.Size(245, 27);
+            this.ksTxtBox.Size = new System.Drawing.Size(245, 25);
             this.ksTxtBox.TabIndex = 1;
             this.ksTxtBox.Text = "0.500";
             this.ksTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // kdGbox
             // 
+            this.kdGbox.AutoSize = true;
             this.kdGbox.Controls.Add(this.kdTrackBar);
             this.kdGbox.Controls.Add(this.kdTxtBox);
             this.kdGbox.Dock = System.Windows.Forms.DockStyle.Top;
             this.kdGbox.Location = new System.Drawing.Point(3, 23);
             this.kdGbox.Name = "kdGbox";
-            this.kdGbox.Size = new System.Drawing.Size(251, 96);
+            this.kdGbox.Size = new System.Drawing.Size(251, 81);
             this.kdGbox.TabIndex = 7;
             this.kdGbox.TabStop = false;
             this.kdGbox.Text = "kd value";
@@ -309,7 +528,7 @@
             // kdTrackBar
             // 
             this.kdTrackBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.kdTrackBar.Location = new System.Drawing.Point(3, 50);
+            this.kdTrackBar.Location = new System.Drawing.Point(3, 48);
             this.kdTrackBar.Maximum = 1000;
             this.kdTrackBar.MaximumSize = new System.Drawing.Size(0, 30);
             this.kdTrackBar.Name = "kdTrackBar";
@@ -324,11 +543,12 @@
             this.kdTxtBox.BackColor = System.Drawing.SystemColors.Control;
             this.kdTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.kdTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.kdTxtBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.kdTxtBox.Enabled = false;
+            this.kdTxtBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.kdTxtBox.Location = new System.Drawing.Point(3, 23);
             this.kdTxtBox.Name = "kdTxtBox";
             this.kdTxtBox.ReadOnly = true;
-            this.kdTxtBox.Size = new System.Drawing.Size(245, 27);
+            this.kdTxtBox.Size = new System.Drawing.Size(245, 25);
             this.kdTxtBox.TabIndex = 1;
             this.kdTxtBox.Text = "0.500";
             this.kdTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -341,7 +561,7 @@
             this.colorDeterminationMethodGbox.Dock = System.Windows.Forms.DockStyle.Top;
             this.colorDeterminationMethodGbox.Location = new System.Drawing.Point(0, 0);
             this.colorDeterminationMethodGbox.Name = "colorDeterminationMethodGbox";
-            this.colorDeterminationMethodGbox.Size = new System.Drawing.Size(257, 105);
+            this.colorDeterminationMethodGbox.Size = new System.Drawing.Size(257, 96);
             this.colorDeterminationMethodGbox.TabIndex = 7;
             this.colorDeterminationMethodGbox.TabStop = false;
             this.colorDeterminationMethodGbox.Text = "Color determination method";
@@ -351,10 +571,10 @@
             this.vertexInterpolationRbutton.Appearance = System.Windows.Forms.Appearance.Button;
             this.vertexInterpolationRbutton.AutoSize = true;
             this.vertexInterpolationRbutton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.vertexInterpolationRbutton.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.vertexInterpolationRbutton.Location = new System.Drawing.Point(3, 60);
+            this.vertexInterpolationRbutton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.vertexInterpolationRbutton.Location = new System.Drawing.Point(3, 58);
             this.vertexInterpolationRbutton.Name = "vertexInterpolationRbutton";
-            this.vertexInterpolationRbutton.Size = new System.Drawing.Size(251, 42);
+            this.vertexInterpolationRbutton.Size = new System.Drawing.Size(251, 35);
             this.vertexInterpolationRbutton.TabIndex = 1;
             this.vertexInterpolationRbutton.Text = "Vertex interpolation";
             this.vertexInterpolationRbutton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -366,11 +586,10 @@
             this.calcAtPointRbutton.AutoSize = true;
             this.calcAtPointRbutton.Checked = true;
             this.calcAtPointRbutton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.calcAtPointRbutton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.calcAtPointRbutton.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.calcAtPointRbutton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.calcAtPointRbutton.Location = new System.Drawing.Point(3, 23);
             this.calcAtPointRbutton.Name = "calcAtPointRbutton";
-            this.calcAtPointRbutton.Size = new System.Drawing.Size(251, 37);
+            this.calcAtPointRbutton.Size = new System.Drawing.Size(251, 35);
             this.calcAtPointRbutton.TabIndex = 0;
             this.calcAtPointRbutton.TabStop = true;
             this.calcAtPointRbutton.Text = "Calculated at point";
@@ -401,8 +620,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
-            this.lightColorGbox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.lightColorPreview)).EndInit();
+            this.objectColorGbox.ResumeLayout(false);
+            this.objectColorGbox.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objectColorSolidTxtBox)).EndInit();
+            this.lightSourceGbox.ResumeLayout(false);
+            this.lightSourceGbox.PerformLayout();
+            this.lightSourceAltitudeGbox.ResumeLayout(false);
+            this.lightSourceAltitudeGbox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lightSourceAltitudeTrackBar)).EndInit();
+            this.lightSourceColorGbox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.lightSourceColorPreview)).EndInit();
             this.coefficientsGbox.ResumeLayout(false);
             this.coefficientsGbox.PerformLayout();
             this.mGbox.ResumeLayout(false);
@@ -441,12 +670,24 @@
         private GroupBox mGbox;
         private GroupBox ksGbox;
         private GroupBox kdGbox;
-        private GroupBox lightColorGbox;
-        private Button changeColorButton;
-        private PictureBox lightColorPreview;
-        private ColorDialog colorDialog1;
+        private GroupBox lightSourceGbox;
+        private Button lightSourceChangeColorButton;
+        private PictureBox lightSourceColorPreview;
         private ToolStripMenuItem visibilityToolStripMenuItem;
         private ToolStripMenuItem showVerticiesToolStripMenuItem;
         private ToolStripMenuItem showEdgesToolStripMenuItem;
+        private GroupBox objectColorGbox;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Button objectColorSolidChangeButton;
+        private Button objectColorTextureLoadButton;
+        private PictureBox objectColorSolidTxtBox;
+        private Button objectColorLoadDefaultButton;
+        private GroupBox lightSourceAltitudeGbox;
+        private TrackBar lightSourceAltitudeTrackBar;
+        private TextBox lightSourceAltitudeTxtBox;
+        private GroupBox lightSourceColorGbox;
+        private RadioButton objectColorTextureModeRbutton;
+        private RadioButton objectColorSolidModeRbutton;
+        private TextBox objectColorTextureTxtBox;
     }
 }
