@@ -70,6 +70,7 @@
             this.kdGbox = new System.Windows.Forms.GroupBox();
             this.kdTrackBar = new System.Windows.Forms.TrackBar();
             this.kdTxtBox = new System.Windows.Forms.TextBox();
+            this.lightStopAnimationCbox = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -105,22 +106,21 @@
             this.colorDeterminationMethodToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 3, 0, 3);
-            this.menuStrip1.Size = new System.Drawing.Size(982, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(861, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // clearCanvasToolStripMenuItem
             // 
             this.clearCanvasToolStripMenuItem.Name = "clearCanvasToolStripMenuItem";
-            this.clearCanvasToolStripMenuItem.Size = new System.Drawing.Size(105, 24);
+            this.clearCanvasToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
             this.clearCanvasToolStripMenuItem.Text = "Clear canvas";
             this.clearCanvasToolStripMenuItem.Click += new System.EventHandler(this.clearCanvasToolStripMenuItem_Click);
             // 
             // loadobjFileToolStripMenuItem
             // 
             this.loadobjFileToolStripMenuItem.Name = "loadobjFileToolStripMenuItem";
-            this.loadobjFileToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.loadobjFileToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
             this.loadobjFileToolStripMenuItem.Text = "Load .obj file ";
             this.loadobjFileToolStripMenuItem.Click += new System.EventHandler(this.loadobjFileToolStripMenuItem_Click);
             // 
@@ -130,7 +130,7 @@
             this.showVerticiesToolStripMenuItem,
             this.showEdgesToolStripMenuItem});
             this.visibilityToolStripMenuItem.Name = "visibilityToolStripMenuItem";
-            this.visibilityToolStripMenuItem.Size = new System.Drawing.Size(79, 24);
+            this.visibilityToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
             this.visibilityToolStripMenuItem.Text = "Visibility";
             // 
             // showVerticiesToolStripMenuItem
@@ -140,7 +140,7 @@
             this.showVerticiesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showVerticiesToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.showVerticiesToolStripMenuItem.Name = "showVerticiesToolStripMenuItem";
-            this.showVerticiesToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            this.showVerticiesToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.showVerticiesToolStripMenuItem.Text = "Show verticies";
             this.showVerticiesToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showToolStripMenuItem_CheckedChanged);
             // 
@@ -150,7 +150,7 @@
             this.showEdgesToolStripMenuItem.CheckOnClick = true;
             this.showEdgesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showEdgesToolStripMenuItem.Name = "showEdgesToolStripMenuItem";
-            this.showEdgesToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            this.showEdgesToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.showEdgesToolStripMenuItem.Text = "Show edges";
             this.showEdgesToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showToolStripMenuItem_CheckedChanged);
             // 
@@ -160,7 +160,7 @@
             this.calculatedAtPointToolStripMenuItem,
             this.vetrexInterpolationToolStripMenuItem});
             this.colorDeterminationMethodToolStripMenuItem.Name = "colorDeterminationMethodToolStripMenuItem";
-            this.colorDeterminationMethodToolStripMenuItem.Size = new System.Drawing.Size(213, 24);
+            this.colorDeterminationMethodToolStripMenuItem.Size = new System.Drawing.Size(171, 20);
             this.colorDeterminationMethodToolStripMenuItem.Text = "Color determination method";
             // 
             // calculatedAtPointToolStripMenuItem
@@ -169,7 +169,7 @@
             this.calculatedAtPointToolStripMenuItem.CheckOnClick = true;
             this.calculatedAtPointToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.calculatedAtPointToolStripMenuItem.Name = "calculatedAtPointToolStripMenuItem";
-            this.calculatedAtPointToolStripMenuItem.Size = new System.Drawing.Size(223, 26);
+            this.calculatedAtPointToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.calculatedAtPointToolStripMenuItem.Text = "Calculated at point";
             this.calculatedAtPointToolStripMenuItem.Click += new System.EventHandler(this.calculatedAtPointToolStripMenuItem_Click);
             // 
@@ -177,7 +177,7 @@
             // 
             this.vetrexInterpolationToolStripMenuItem.CheckOnClick = true;
             this.vetrexInterpolationToolStripMenuItem.Name = "vetrexInterpolationToolStripMenuItem";
-            this.vetrexInterpolationToolStripMenuItem.Size = new System.Drawing.Size(223, 26);
+            this.vetrexInterpolationToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.vetrexInterpolationToolStripMenuItem.Text = "Vetrex interpolation";
             this.vetrexInterpolationToolStripMenuItem.Click += new System.EventHandler(this.vetrexInterpolationToolStripMenuItem_Click);
             // 
@@ -185,7 +185,8 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 30);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -199,7 +200,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.objectColorGbox);
             this.splitContainer1.Panel2.Controls.Add(this.lightSourceGbox);
             this.splitContainer1.Panel2.Controls.Add(this.coefficientsGbox);
-            this.splitContainer1.Size = new System.Drawing.Size(982, 721);
+            this.splitContainer1.Size = new System.Drawing.Size(861, 545);
             this.splitContainer1.SplitterDistance = 721;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -207,8 +208,9 @@
             // 
             this.canvas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.canvas.Location = new System.Drawing.Point(0, 0);
+            this.canvas.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.canvas.Name = "canvas";
-            this.canvas.Size = new System.Drawing.Size(721, 721);
+            this.canvas.Size = new System.Drawing.Size(721, 545);
             this.canvas.TabIndex = 0;
             this.canvas.TabStop = false;
             // 
@@ -218,10 +220,12 @@
             this.normalsGbox.Controls.Add(this.normalMapTxtBox);
             this.normalsGbox.Controls.Add(this.modifyNormalsCbutton);
             this.normalsGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.normalsGbox.Location = new System.Drawing.Point(0, 625);
-            this.normalsGbox.MaximumSize = new System.Drawing.Size(250, 90);
+            this.normalsGbox.Location = new System.Drawing.Point(0, 475);
+            this.normalsGbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.normalsGbox.MaximumSize = new System.Drawing.Size(219, 68);
             this.normalsGbox.Name = "normalsGbox";
-            this.normalsGbox.Size = new System.Drawing.Size(250, 90);
+            this.normalsGbox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.normalsGbox.Size = new System.Drawing.Size(136, 68);
             this.normalsGbox.TabIndex = 11;
             this.normalsGbox.TabStop = false;
             this.normalsGbox.Text = "Normals";
@@ -232,11 +236,12 @@
             this.normalMapLoadButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.normalMapLoadButton.Dock = System.Windows.Forms.DockStyle.Right;
             this.normalMapLoadButton.Enabled = false;
-            this.normalMapLoadButton.Location = new System.Drawing.Point(110, 53);
+            this.normalMapLoadButton.Location = new System.Drawing.Point(56, 43);
+            this.normalMapLoadButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.normalMapLoadButton.Name = "normalMapLoadButton";
-            this.normalMapLoadButton.Size = new System.Drawing.Size(137, 34);
+            this.normalMapLoadButton.Size = new System.Drawing.Size(77, 23);
             this.normalMapLoadButton.TabIndex = 2;
-            this.normalMapLoadButton.Text = "Load normal map";
+            this.normalMapLoadButton.Text = "Load nmap";
             this.normalMapLoadButton.UseVisualStyleBackColor = true;
             this.normalMapLoadButton.Click += new System.EventHandler(this.normalMapLoadButton_Click);
             // 
@@ -246,10 +251,11 @@
             this.normalMapTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.normalMapTxtBox.Dock = System.Windows.Forms.DockStyle.Left;
             this.normalMapTxtBox.Enabled = false;
-            this.normalMapTxtBox.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.normalMapTxtBox.Location = new System.Drawing.Point(3, 53);
+            this.normalMapTxtBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.normalMapTxtBox.Location = new System.Drawing.Point(3, 43);
+            this.normalMapTxtBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.normalMapTxtBox.Name = "normalMapTxtBox";
-            this.normalMapTxtBox.Size = new System.Drawing.Size(101, 32);
+            this.normalMapTxtBox.Size = new System.Drawing.Size(53, 20);
             this.normalMapTxtBox.TabIndex = 1;
             this.normalMapTxtBox.Text = "No file";
             this.normalMapTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -259,9 +265,10 @@
             this.modifyNormalsCbutton.Appearance = System.Windows.Forms.Appearance.Button;
             this.modifyNormalsCbutton.AutoSize = true;
             this.modifyNormalsCbutton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.modifyNormalsCbutton.Location = new System.Drawing.Point(3, 23);
+            this.modifyNormalsCbutton.Location = new System.Drawing.Point(3, 18);
+            this.modifyNormalsCbutton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.modifyNormalsCbutton.Name = "modifyNormalsCbutton";
-            this.modifyNormalsCbutton.Size = new System.Drawing.Size(244, 30);
+            this.modifyNormalsCbutton.Size = new System.Drawing.Size(130, 25);
             this.modifyNormalsCbutton.TabIndex = 0;
             this.modifyNormalsCbutton.Text = "Modify normals";
             this.modifyNormalsCbutton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -275,9 +282,11 @@
             this.objectColorGbox.Controls.Add(this.tableLayoutPanel1);
             this.objectColorGbox.Controls.Add(this.objectColorLoadDefaultButton);
             this.objectColorGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.objectColorGbox.Location = new System.Drawing.Point(0, 444);
+            this.objectColorGbox.Location = new System.Drawing.Point(0, 340);
+            this.objectColorGbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.objectColorGbox.Name = "objectColorGbox";
-            this.objectColorGbox.Size = new System.Drawing.Size(257, 181);
+            this.objectColorGbox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.objectColorGbox.Size = new System.Drawing.Size(136, 135);
             this.objectColorGbox.TabIndex = 10;
             this.objectColorGbox.TabStop = false;
             this.objectColorGbox.Text = "Color of the object";
@@ -296,24 +305,27 @@
             this.tableLayoutPanel1.Controls.Add(this.objectColorTextureLoadButton, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.objectColorTextureTxtBox, 1, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 56);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 43);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(251, 122);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(130, 90);
             this.tableLayoutPanel1.TabIndex = 8;
             // 
             // objectColorTextureModeRbutton
             // 
             this.objectColorTextureModeRbutton.Appearance = System.Windows.Forms.Appearance.Button;
             this.objectColorTextureModeRbutton.AutoSize = true;
-            this.objectColorTextureModeRbutton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.objectColorTextureModeRbutton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.objectColorTextureModeRbutton.Location = new System.Drawing.Point(128, 3);
+            this.objectColorTextureModeRbutton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.objectColorTextureModeRbutton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorTextureModeRbutton.Location = new System.Drawing.Point(68, 2);
+            this.objectColorTextureModeRbutton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.objectColorTextureModeRbutton.MaximumSize = new System.Drawing.Size(59, 23);
             this.objectColorTextureModeRbutton.Name = "objectColorTextureModeRbutton";
-            this.objectColorTextureModeRbutton.Size = new System.Drawing.Size(120, 33);
+            this.objectColorTextureModeRbutton.Size = new System.Drawing.Size(59, 23);
             this.objectColorTextureModeRbutton.TabIndex = 7;
             this.objectColorTextureModeRbutton.TabStop = true;
             this.objectColorTextureModeRbutton.Text = "Texture";
@@ -327,10 +339,11 @@
             this.objectColorSolidChangeButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.objectColorSolidChangeButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.objectColorSolidChangeButton.Enabled = false;
-            this.objectColorSolidChangeButton.Font = new System.Drawing.Font("Segoe UI", 9.6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.objectColorSolidChangeButton.Location = new System.Drawing.Point(3, 88);
+            this.objectColorSolidChangeButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorSolidChangeButton.Location = new System.Drawing.Point(3, 63);
+            this.objectColorSolidChangeButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.objectColorSolidChangeButton.Name = "objectColorSolidChangeButton";
-            this.objectColorSolidChangeButton.Size = new System.Drawing.Size(119, 31);
+            this.objectColorSolidChangeButton.Size = new System.Drawing.Size(59, 25);
             this.objectColorSolidChangeButton.TabIndex = 5;
             this.objectColorSolidChangeButton.Text = "Change color";
             this.objectColorSolidChangeButton.UseVisualStyleBackColor = true;
@@ -342,9 +355,10 @@
             this.objectColorSolidTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.objectColorSolidTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.objectColorSolidTxtBox.Enabled = false;
-            this.objectColorSolidTxtBox.Location = new System.Drawing.Point(3, 42);
+            this.objectColorSolidTxtBox.Location = new System.Drawing.Point(3, 29);
+            this.objectColorSolidTxtBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.objectColorSolidTxtBox.Name = "objectColorSolidTxtBox";
-            this.objectColorSolidTxtBox.Size = new System.Drawing.Size(119, 40);
+            this.objectColorSolidTxtBox.Size = new System.Drawing.Size(59, 30);
             this.objectColorSolidTxtBox.TabIndex = 2;
             this.objectColorSolidTxtBox.TabStop = false;
             // 
@@ -353,13 +367,15 @@
             this.objectColorSolidModeRbutton.Appearance = System.Windows.Forms.Appearance.Button;
             this.objectColorSolidModeRbutton.AutoSize = true;
             this.objectColorSolidModeRbutton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.objectColorSolidModeRbutton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.objectColorSolidModeRbutton.Location = new System.Drawing.Point(3, 3);
+            this.objectColorSolidModeRbutton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorSolidModeRbutton.Location = new System.Drawing.Point(3, 2);
+            this.objectColorSolidModeRbutton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.objectColorSolidModeRbutton.MaximumSize = new System.Drawing.Size(59, 23);
             this.objectColorSolidModeRbutton.Name = "objectColorSolidModeRbutton";
-            this.objectColorSolidModeRbutton.Size = new System.Drawing.Size(119, 33);
+            this.objectColorSolidModeRbutton.Size = new System.Drawing.Size(59, 23);
             this.objectColorSolidModeRbutton.TabIndex = 6;
             this.objectColorSolidModeRbutton.TabStop = true;
-            this.objectColorSolidModeRbutton.Text = "Solid color";
+            this.objectColorSolidModeRbutton.Text = "Solid";
             this.objectColorSolidModeRbutton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.objectColorSolidModeRbutton.UseVisualStyleBackColor = true;
             this.objectColorSolidModeRbutton.CheckedChanged += new System.EventHandler(this.objectColorSolidModeRbutton_CheckedChanged);
@@ -370,10 +386,11 @@
             this.objectColorTextureLoadButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.objectColorTextureLoadButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.objectColorTextureLoadButton.Enabled = false;
-            this.objectColorTextureLoadButton.Font = new System.Drawing.Font("Segoe UI", 9.6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.objectColorTextureLoadButton.Location = new System.Drawing.Point(128, 88);
+            this.objectColorTextureLoadButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorTextureLoadButton.Location = new System.Drawing.Point(68, 63);
+            this.objectColorTextureLoadButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.objectColorTextureLoadButton.Name = "objectColorTextureLoadButton";
-            this.objectColorTextureLoadButton.Size = new System.Drawing.Size(120, 31);
+            this.objectColorTextureLoadButton.Size = new System.Drawing.Size(59, 25);
             this.objectColorTextureLoadButton.TabIndex = 4;
             this.objectColorTextureLoadButton.Text = "Load texture";
             this.objectColorTextureLoadButton.UseVisualStyleBackColor = true;
@@ -383,13 +400,14 @@
             // 
             this.objectColorTextureTxtBox.BackColor = System.Drawing.SystemColors.Control;
             this.objectColorTextureTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.objectColorTextureTxtBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.objectColorTextureTxtBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.objectColorTextureTxtBox.Enabled = false;
-            this.objectColorTextureTxtBox.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.objectColorTextureTxtBox.Location = new System.Drawing.Point(128, 42);
+            this.objectColorTextureTxtBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorTextureTxtBox.Location = new System.Drawing.Point(68, 29);
+            this.objectColorTextureTxtBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.objectColorTextureTxtBox.Multiline = true;
             this.objectColorTextureTxtBox.Name = "objectColorTextureTxtBox";
-            this.objectColorTextureTxtBox.Size = new System.Drawing.Size(120, 40);
+            this.objectColorTextureTxtBox.Size = new System.Drawing.Size(59, 30);
             this.objectColorTextureTxtBox.TabIndex = 8;
             this.objectColorTextureTxtBox.Text = "No file ";
             this.objectColorTextureTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -399,10 +417,10 @@
             this.objectColorLoadDefaultButton.AutoSize = true;
             this.objectColorLoadDefaultButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.objectColorLoadDefaultButton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.objectColorLoadDefaultButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.objectColorLoadDefaultButton.Location = new System.Drawing.Point(3, 23);
+            this.objectColorLoadDefaultButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.objectColorLoadDefaultButton.Location = new System.Drawing.Point(3, 18);
             this.objectColorLoadDefaultButton.Name = "objectColorLoadDefaultButton";
-            this.objectColorLoadDefaultButton.Size = new System.Drawing.Size(251, 33);
+            this.objectColorLoadDefaultButton.Size = new System.Drawing.Size(130, 25);
             this.objectColorLoadDefaultButton.TabIndex = 7;
             this.objectColorLoadDefaultButton.Text = "Load default texture";
             this.objectColorLoadDefaultButton.UseVisualStyleBackColor = true;
@@ -411,12 +429,15 @@
             // lightSourceGbox
             // 
             this.lightSourceGbox.AutoSize = true;
-            this.lightSourceGbox.Controls.Add(this.lightSourceAltitudeGbox);
+            this.lightSourceGbox.Controls.Add(this.lightStopAnimationCbox);
             this.lightSourceGbox.Controls.Add(this.lightSourceColorGbox);
+            this.lightSourceGbox.Controls.Add(this.lightSourceAltitudeGbox);
             this.lightSourceGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightSourceGbox.Location = new System.Drawing.Point(0, 269);
+            this.lightSourceGbox.Location = new System.Drawing.Point(0, 188);
+            this.lightSourceGbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lightSourceGbox.Name = "lightSourceGbox";
-            this.lightSourceGbox.Size = new System.Drawing.Size(257, 175);
+            this.lightSourceGbox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lightSourceGbox.Size = new System.Drawing.Size(136, 152);
             this.lightSourceGbox.TabIndex = 1;
             this.lightSourceGbox.TabStop = false;
             this.lightSourceGbox.Text = "Light source";
@@ -427,9 +448,11 @@
             this.lightSourceAltitudeGbox.Controls.Add(this.lightSourceAltitudeTrackBar);
             this.lightSourceAltitudeGbox.Controls.Add(this.lightSourceAltitudeTxtBox);
             this.lightSourceAltitudeGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightSourceAltitudeGbox.Location = new System.Drawing.Point(3, 91);
+            this.lightSourceAltitudeGbox.Location = new System.Drawing.Point(3, 18);
+            this.lightSourceAltitudeGbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lightSourceAltitudeGbox.Name = "lightSourceAltitudeGbox";
-            this.lightSourceAltitudeGbox.Size = new System.Drawing.Size(251, 81);
+            this.lightSourceAltitudeGbox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lightSourceAltitudeGbox.Size = new System.Drawing.Size(130, 56);
             this.lightSourceAltitudeGbox.TabIndex = 6;
             this.lightSourceAltitudeGbox.TabStop = false;
             this.lightSourceAltitudeGbox.Text = "Altitude";
@@ -437,11 +460,12 @@
             // lightSourceAltitudeTrackBar
             // 
             this.lightSourceAltitudeTrackBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightSourceAltitudeTrackBar.Location = new System.Drawing.Point(3, 48);
+            this.lightSourceAltitudeTrackBar.Location = new System.Drawing.Point(3, 36);
+            this.lightSourceAltitudeTrackBar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lightSourceAltitudeTrackBar.Maximum = 721000;
-            this.lightSourceAltitudeTrackBar.MaximumSize = new System.Drawing.Size(0, 30);
+            this.lightSourceAltitudeTrackBar.MaximumSize = new System.Drawing.Size(0, 18);
             this.lightSourceAltitudeTrackBar.Name = "lightSourceAltitudeTrackBar";
-            this.lightSourceAltitudeTrackBar.Size = new System.Drawing.Size(245, 30);
+            this.lightSourceAltitudeTrackBar.Size = new System.Drawing.Size(124, 18);
             this.lightSourceAltitudeTrackBar.TabIndex = 0;
             this.lightSourceAltitudeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.lightSourceAltitudeTrackBar.Value = 365500;
@@ -453,11 +477,12 @@
             this.lightSourceAltitudeTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lightSourceAltitudeTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.lightSourceAltitudeTxtBox.Enabled = false;
-            this.lightSourceAltitudeTxtBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lightSourceAltitudeTxtBox.Location = new System.Drawing.Point(3, 23);
+            this.lightSourceAltitudeTxtBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lightSourceAltitudeTxtBox.Location = new System.Drawing.Point(3, 18);
+            this.lightSourceAltitudeTxtBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lightSourceAltitudeTxtBox.Name = "lightSourceAltitudeTxtBox";
             this.lightSourceAltitudeTxtBox.ReadOnly = true;
-            this.lightSourceAltitudeTxtBox.Size = new System.Drawing.Size(245, 25);
+            this.lightSourceAltitudeTxtBox.Size = new System.Drawing.Size(124, 18);
             this.lightSourceAltitudeTxtBox.TabIndex = 1;
             this.lightSourceAltitudeTxtBox.Text = "365.500";
             this.lightSourceAltitudeTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -468,9 +493,11 @@
             this.lightSourceColorGbox.Controls.Add(this.lightSourceColorPreview);
             this.lightSourceColorGbox.Controls.Add(this.lightSourceChangeColorButton);
             this.lightSourceColorGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightSourceColorGbox.Location = new System.Drawing.Point(3, 23);
+            this.lightSourceColorGbox.Location = new System.Drawing.Point(3, 74);
+            this.lightSourceColorGbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lightSourceColorGbox.Name = "lightSourceColorGbox";
-            this.lightSourceColorGbox.Size = new System.Drawing.Size(251, 68);
+            this.lightSourceColorGbox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lightSourceColorGbox.Size = new System.Drawing.Size(130, 51);
             this.lightSourceColorGbox.TabIndex = 2;
             this.lightSourceColorGbox.TabStop = false;
             this.lightSourceColorGbox.Text = "Color";
@@ -481,11 +508,12 @@
             this.lightSourceColorPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lightSourceColorPreview.Dock = System.Windows.Forms.DockStyle.Left;
             this.lightSourceColorPreview.Enabled = false;
-            this.lightSourceColorPreview.Location = new System.Drawing.Point(3, 23);
-            this.lightSourceColorPreview.MaximumSize = new System.Drawing.Size(83, 40);
-            this.lightSourceColorPreview.MinimumSize = new System.Drawing.Size(83, 40);
+            this.lightSourceColorPreview.Location = new System.Drawing.Point(3, 18);
+            this.lightSourceColorPreview.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lightSourceColorPreview.MaximumSize = new System.Drawing.Size(50, 30);
+            this.lightSourceColorPreview.MinimumSize = new System.Drawing.Size(50, 30);
             this.lightSourceColorPreview.Name = "lightSourceColorPreview";
-            this.lightSourceColorPreview.Size = new System.Drawing.Size(83, 40);
+            this.lightSourceColorPreview.Size = new System.Drawing.Size(50, 30);
             this.lightSourceColorPreview.TabIndex = 0;
             this.lightSourceColorPreview.TabStop = false;
             // 
@@ -493,11 +521,12 @@
             // 
             this.lightSourceChangeColorButton.Dock = System.Windows.Forms.DockStyle.Right;
             this.lightSourceChangeColorButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lightSourceChangeColorButton.Location = new System.Drawing.Point(88, 23);
-            this.lightSourceChangeColorButton.MaximumSize = new System.Drawing.Size(160, 40);
-            this.lightSourceChangeColorButton.MinimumSize = new System.Drawing.Size(160, 40);
+            this.lightSourceChangeColorButton.Location = new System.Drawing.Point(57, 18);
+            this.lightSourceChangeColorButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lightSourceChangeColorButton.MaximumSize = new System.Drawing.Size(70, 30);
+            this.lightSourceChangeColorButton.MinimumSize = new System.Drawing.Size(70, 30);
             this.lightSourceChangeColorButton.Name = "lightSourceChangeColorButton";
-            this.lightSourceChangeColorButton.Size = new System.Drawing.Size(160, 40);
+            this.lightSourceChangeColorButton.Size = new System.Drawing.Size(70, 30);
             this.lightSourceChangeColorButton.TabIndex = 1;
             this.lightSourceChangeColorButton.Text = "Change color";
             this.lightSourceChangeColorButton.UseVisualStyleBackColor = true;
@@ -511,8 +540,10 @@
             this.coefficientsGbox.Controls.Add(this.kdGbox);
             this.coefficientsGbox.Dock = System.Windows.Forms.DockStyle.Top;
             this.coefficientsGbox.Location = new System.Drawing.Point(0, 0);
+            this.coefficientsGbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.coefficientsGbox.Name = "coefficientsGbox";
-            this.coefficientsGbox.Size = new System.Drawing.Size(257, 269);
+            this.coefficientsGbox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.coefficientsGbox.Size = new System.Drawing.Size(136, 188);
             this.coefficientsGbox.TabIndex = 8;
             this.coefficientsGbox.TabStop = false;
             this.coefficientsGbox.Text = "Coefficients";
@@ -523,9 +554,11 @@
             this.mGbox.Controls.Add(this.mTrackBar);
             this.mGbox.Controls.Add(this.mTxtBox);
             this.mGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.mGbox.Location = new System.Drawing.Point(3, 185);
+            this.mGbox.Location = new System.Drawing.Point(3, 130);
+            this.mGbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.mGbox.Name = "mGbox";
-            this.mGbox.Size = new System.Drawing.Size(251, 81);
+            this.mGbox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.mGbox.Size = new System.Drawing.Size(130, 56);
             this.mGbox.TabIndex = 5;
             this.mGbox.TabStop = false;
             this.mGbox.Text = "m value";
@@ -533,12 +566,13 @@
             // mTrackBar
             // 
             this.mTrackBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.mTrackBar.Location = new System.Drawing.Point(3, 48);
+            this.mTrackBar.Location = new System.Drawing.Point(3, 36);
+            this.mTrackBar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.mTrackBar.Maximum = 100000;
-            this.mTrackBar.MaximumSize = new System.Drawing.Size(0, 30);
+            this.mTrackBar.MaximumSize = new System.Drawing.Size(0, 18);
             this.mTrackBar.Minimum = 1000;
             this.mTrackBar.Name = "mTrackBar";
-            this.mTrackBar.Size = new System.Drawing.Size(245, 30);
+            this.mTrackBar.Size = new System.Drawing.Size(124, 18);
             this.mTrackBar.TabIndex = 0;
             this.mTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.mTrackBar.Value = 50500;
@@ -550,11 +584,12 @@
             this.mTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.mTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.mTxtBox.Enabled = false;
-            this.mTxtBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.mTxtBox.Location = new System.Drawing.Point(3, 23);
+            this.mTxtBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mTxtBox.Location = new System.Drawing.Point(3, 18);
+            this.mTxtBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.mTxtBox.Name = "mTxtBox";
             this.mTxtBox.ReadOnly = true;
-            this.mTxtBox.Size = new System.Drawing.Size(245, 25);
+            this.mTxtBox.Size = new System.Drawing.Size(124, 18);
             this.mTxtBox.TabIndex = 1;
             this.mTxtBox.Text = "50.500";
             this.mTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -565,9 +600,11 @@
             this.ksGbox.Controls.Add(this.ksTrackBar);
             this.ksGbox.Controls.Add(this.ksTxtBox);
             this.ksGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ksGbox.Location = new System.Drawing.Point(3, 104);
+            this.ksGbox.Location = new System.Drawing.Point(3, 74);
+            this.ksGbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ksGbox.Name = "ksGbox";
-            this.ksGbox.Size = new System.Drawing.Size(251, 81);
+            this.ksGbox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ksGbox.Size = new System.Drawing.Size(130, 56);
             this.ksGbox.TabIndex = 6;
             this.ksGbox.TabStop = false;
             this.ksGbox.Text = "ks value";
@@ -575,11 +612,12 @@
             // ksTrackBar
             // 
             this.ksTrackBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ksTrackBar.Location = new System.Drawing.Point(3, 48);
+            this.ksTrackBar.Location = new System.Drawing.Point(3, 36);
+            this.ksTrackBar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ksTrackBar.Maximum = 1000;
-            this.ksTrackBar.MaximumSize = new System.Drawing.Size(0, 30);
+            this.ksTrackBar.MaximumSize = new System.Drawing.Size(0, 18);
             this.ksTrackBar.Name = "ksTrackBar";
-            this.ksTrackBar.Size = new System.Drawing.Size(245, 30);
+            this.ksTrackBar.Size = new System.Drawing.Size(124, 18);
             this.ksTrackBar.TabIndex = 0;
             this.ksTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.ksTrackBar.Value = 500;
@@ -591,11 +629,12 @@
             this.ksTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ksTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.ksTxtBox.Enabled = false;
-            this.ksTxtBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.ksTxtBox.Location = new System.Drawing.Point(3, 23);
+            this.ksTxtBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ksTxtBox.Location = new System.Drawing.Point(3, 18);
+            this.ksTxtBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ksTxtBox.Name = "ksTxtBox";
             this.ksTxtBox.ReadOnly = true;
-            this.ksTxtBox.Size = new System.Drawing.Size(245, 25);
+            this.ksTxtBox.Size = new System.Drawing.Size(124, 18);
             this.ksTxtBox.TabIndex = 1;
             this.ksTxtBox.Text = "0.500";
             this.ksTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -606,9 +645,11 @@
             this.kdGbox.Controls.Add(this.kdTrackBar);
             this.kdGbox.Controls.Add(this.kdTxtBox);
             this.kdGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.kdGbox.Location = new System.Drawing.Point(3, 23);
+            this.kdGbox.Location = new System.Drawing.Point(3, 18);
+            this.kdGbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.kdGbox.Name = "kdGbox";
-            this.kdGbox.Size = new System.Drawing.Size(251, 81);
+            this.kdGbox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.kdGbox.Size = new System.Drawing.Size(130, 56);
             this.kdGbox.TabIndex = 7;
             this.kdGbox.TabStop = false;
             this.kdGbox.Text = "kd value";
@@ -616,11 +657,12 @@
             // kdTrackBar
             // 
             this.kdTrackBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.kdTrackBar.Location = new System.Drawing.Point(3, 48);
+            this.kdTrackBar.Location = new System.Drawing.Point(3, 36);
+            this.kdTrackBar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.kdTrackBar.Maximum = 1000;
-            this.kdTrackBar.MaximumSize = new System.Drawing.Size(0, 30);
+            this.kdTrackBar.MaximumSize = new System.Drawing.Size(0, 18);
             this.kdTrackBar.Name = "kdTrackBar";
-            this.kdTrackBar.Size = new System.Drawing.Size(245, 30);
+            this.kdTrackBar.Size = new System.Drawing.Size(124, 18);
             this.kdTrackBar.TabIndex = 0;
             this.kdTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.kdTrackBar.Value = 500;
@@ -632,28 +674,44 @@
             this.kdTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.kdTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.kdTxtBox.Enabled = false;
-            this.kdTxtBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.kdTxtBox.Location = new System.Drawing.Point(3, 23);
+            this.kdTxtBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.kdTxtBox.Location = new System.Drawing.Point(3, 18);
+            this.kdTxtBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.kdTxtBox.Name = "kdTxtBox";
             this.kdTxtBox.ReadOnly = true;
-            this.kdTxtBox.Size = new System.Drawing.Size(245, 25);
+            this.kdTxtBox.Size = new System.Drawing.Size(124, 18);
             this.kdTxtBox.TabIndex = 1;
             this.kdTxtBox.Text = "0.500";
             this.kdTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // lightStopAnimationCbox
+            // 
+            this.lightStopAnimationCbox.Appearance = System.Windows.Forms.Appearance.Button;
+            this.lightStopAnimationCbox.AutoSize = true;
+            this.lightStopAnimationCbox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lightStopAnimationCbox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lightStopAnimationCbox.Location = new System.Drawing.Point(3, 125);
+            this.lightStopAnimationCbox.Name = "lightStopAnimationCbox";
+            this.lightStopAnimationCbox.Size = new System.Drawing.Size(130, 25);
+            this.lightStopAnimationCbox.TabIndex = 7;
+            this.lightStopAnimationCbox.Text = "Stop animation";
+            this.lightStopAnimationCbox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lightStopAnimationCbox.UseVisualStyleBackColor = true;
+            // 
             // mainWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(982, 751);
+            this.ClientSize = new System.Drawing.Size(861, 569);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1000, 798);
-            this.MinimumSize = new System.Drawing.Size(1000, 798);
+            this.MaximumSize = new System.Drawing.Size(877, 608);
+            this.MinimumSize = new System.Drawing.Size(877, 608);
             this.Name = "mainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Triangle mesh filler";
@@ -738,5 +796,6 @@
         private Button normalMapLoadButton;
         private TextBox normalMapTxtBox;
         private CheckBox modifyNormalsCbutton;
+        private CheckBox lightStopAnimationCbox;
     }
 }

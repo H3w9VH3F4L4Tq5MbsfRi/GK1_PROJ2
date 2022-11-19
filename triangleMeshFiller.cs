@@ -17,16 +17,16 @@ namespace GK1_PROJ2
         private float maxY;
         private float maxZ;
         private Bitmap drawArea;
-        private Color canvasColor;
+        private static Color canvasColor = Color.HotPink;
         private static Brush blackBrush = Brushes.Black;
         private const int pointRadious = 4;
         private static Pen edgePen = new Pen(blackBrush, 2);
-        private const int padding = 10;
+        private const int padding = 60;
         private const int kMin = 0;
         private const int kMax = 0;
         private const int mMin = 1;
         private const int mMax = 100;
-        //Image image;
+
 
         public mainWindow()
         {
@@ -34,14 +34,17 @@ namespace GK1_PROJ2
             vertices = new List<Vertex>();
             polygons = new List<Polygon>();
             normals = new List<Vector>();
-            canvasColor = Color.HotPink;
             drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
-            //image = Image.FromFile(System.IO.Path.GetFullPath(@"..\..\..\") + @"\defaultObjectColor.jpg");
-            //drawArea = new Bitmap(image, new Size(canvas.Width, canvas.Height));
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
                 g.Clear(canvasColor);
             recalcSliders();
+            minX = float.MaxValue;
+            maxX = float.MinValue;
+            minY = float.MaxValue;
+            maxY = float.MinValue;
+            minZ = float.MaxValue;
+            maxZ = float.MinValue;
         }
         private void clearCanvasToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -62,9 +65,6 @@ namespace GK1_PROJ2
                         rescaleVerticies();
                         repaint();
                         MessageBox.Show("Succesfully loaded " + polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        //Debug.WriteLine("minX = " + minX.ToString() + ", maxX = " + maxX.ToString() + ".");
-                        //Debug.WriteLine("minY = " + minY.ToString() + ", maxY = " + maxY.ToString() + ".");
-                        //Debug.WriteLine("minZ = " + minZ.ToString() + ", maxZ = " + maxZ.ToString() + ".");
                     }
                 }
             }
@@ -150,58 +150,35 @@ namespace GK1_PROJ2
         }
         private void rescaleVerticies()
         {
-            var height = canvas.Height - padding;
-            var width = canvas.Width - padding;
+            float height = canvas.Height - padding;
+            float width = canvas.Width - padding;
 
-            bool Y = ((height / (maxY - minY)) < (width / (maxX - minX)));
+            (int x, int y) center = ((canvas.Width / 2), (canvas.Height / 2));
+
             float k;
-            if (Y)
-            {
+
+            if ((width / height) > ((maxX - minX) / (maxY - minY)))
                 k = height / (maxY - minY);
-                foreach (var v in vertices)
-                {
-                    v.y -= minY;
-                    v.y *= k;
-                    v.y += (padding / 2);
-                    v.x -= minX;
-                    v.x += (width - height) / 2;
-                    v.x *= k;
-                    v.x += (padding / 2);
-                    v.z -= minZ;
-                    v.z *= k;
-                    v.normal.x *= k;
-                    v.normal.y *= k;
-                    v.normal.z *= k;
-                }
-            }
             else
-            {
                 k = width / (maxX - minX);
-                foreach (var v in vertices)
-                {
-                    v.x -= minX;
-                    v.x *= k;
-                    v.x += (padding / 2);
-                    v.y -= minY;
-                    v.y += (height - width) / 2;
-                    v.y *= k;
-                    v.y += (padding / 2);
-                    v.z -= minZ;
-                    v.z *= k;
-                    v.normal.x *= k;
-                    v.normal.y *= k;
-                    v.normal.z *= k;
-                }
+
+            foreach(var v in vertices)
+            {
+                v.x *= k;
+                v.x += center.x;
+                v.y *= k;
+                v.y += center.y;
+                v.z += minZ;
+                v.z *= k;
+                v.normal.x *= k;
+                v.normal.y *= k;
+                v.normal.z *= k;
             }
         }
         private void repaint()
         {
             using (Graphics g = Graphics.FromImage(drawArea))
             {
-                if (objectColorSolidModeRbutton.Checked)
-                {
-                    canvasColor = objectColorSolidTxtBox.BackColor;
-                }
                 g.Clear(canvasColor);
 
                 foreach (var p in polygons)
@@ -233,6 +210,12 @@ namespace GK1_PROJ2
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
                 g.Clear(canvasColor);
+            minX = float.MaxValue;
+            maxX = float.MinValue;
+            minY = float.MaxValue;
+            maxY = float.MinValue;
+            minZ = float.MaxValue;
+            maxZ = float.MinValue;
         }
         private void kdTrackBar_ValueChanged(object sender, EventArgs e)
         {
@@ -329,11 +312,7 @@ namespace GK1_PROJ2
                 dialog.Title = "Load texture";
 
                 if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    var separated = dialog.FileName.Split("\\");
-                    var last = separated[separated.Length - 1];
-                    objectColorTextureTxtBox.Text = last;
-                }
+                    objectColorTextureTxtBox.Text = "Loaded";
             }
         }
         private void calculatedAtPointToolStripMenuItem_Click(object sender, EventArgs e)
@@ -359,11 +338,7 @@ namespace GK1_PROJ2
                 dialog.Title = "Load normal map";
 
                 if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    var separated = dialog.FileName.Split("\\");
-                    var last = separated[separated.Length - 1];
-                    normalMapTxtBox.Text = last;
-                }
+                    normalMapTxtBox.Text = "Loaded";
             }
         }
     }
