@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Numerics;
 
 namespace GK1_PROJ2
 {
@@ -9,7 +10,7 @@ namespace GK1_PROJ2
     {
         private List<Vertex> vertices;
         private List<Polygon> polygons;
-        private List<Vector> normals;
+        private List<Vector3> normals;
         private float minX;
         private float minY;
         private float minZ;
@@ -19,6 +20,7 @@ namespace GK1_PROJ2
         private Bitmap drawArea;
         private static Color canvasColor = Color.HotPink;
         private static Brush blackBrush = Brushes.Black;
+        private static Brush cyanBrush = Brushes.Cyan;
         private const int pointRadious = 4;
         private static Pen edgePen = new Pen(blackBrush, 2);
         private const int padding = 60;
@@ -27,13 +29,12 @@ namespace GK1_PROJ2
         private const int mMin = 1;
         private const int mMax = 100;
 
-
         public mainWindow()
         {
             InitializeComponent();
             vertices = new List<Vertex>();
             polygons = new List<Polygon>();
-            normals = new List<Vector>();
+            normals = new List<Vector3>();
             drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
@@ -112,7 +113,7 @@ namespace GK1_PROJ2
                                 x = float.Parse(parts[1]);
                                 y = float.Parse(parts[2]);
                                 z = float.Parse(parts[3]);
-                                normals.Add(new Vector(x, y, z));
+                                normals.Add(new Vector3(x, y, z));
                                 break;
                             }
                         case "f":
@@ -170,9 +171,9 @@ namespace GK1_PROJ2
                 v.y += center.y;
                 v.z += minZ;
                 v.z *= k;
-                v.normal.x *= k;
-                v.normal.y *= k;
-                v.normal.z *= k;
+                v.normal.X *= k;
+                v.normal.Y *= k;
+                v.normal.Z *= k;
             }
         }
         private void repaint()
@@ -182,6 +183,10 @@ namespace GK1_PROJ2
                 g.Clear(canvasColor);
 
                 foreach (var p in polygons)
+                    fillpolygon(g,p);
+
+                foreach(var p in polygons)
+                {
                     for (int i = 0; i < p.verticies.Count; i++)
                     {
                         if (showVerticiesToolStripMenuItem.Checked)
@@ -194,6 +199,7 @@ namespace GK1_PROJ2
                             g.DrawLine(edgePen, start, end);
                         }
                     }
+                }
             }
             canvas.Refresh();
         }
@@ -205,7 +211,7 @@ namespace GK1_PROJ2
         {
             vertices = new List<Vertex>();
             polygons = new List<Polygon>();
-            normals = new List<Vector>();
+            normals = new List<Vector3>();
             drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
@@ -341,33 +347,79 @@ namespace GK1_PROJ2
                     normalMapTxtBox.Text = "Loaded";
             }
         }
+        private void fillpolygon(Graphics g, Polygon p)
+        {
+            SortedDictionary<int,List<Edge>> et = new SortedDictionary<int,List<Edge>>();
+            List<Edge> aet = new List<Edge>();
+
+            for (int i = 0; i < p.verticies.Count; i++)
+            {
+                int inext = (i + 1 == p.verticies.Count) ? 0 : i + 1;
+                if (Math.Abs(p.verticies[inext].y - p.verticies[i].y) != 0)
+                {
+                    var ed = new Edge(p.verticies[i], p.verticies[inext]);
+                    if (!et.ContainsKey(ed.ymin))
+                        et.Add(ed.ymin, new List<Edge>());
+                    et[ed.ymin].Add(ed);
+                }
+            }
+
+            var curY = et.First().Key;
+            while (et.Count > 0 || aet.Count > 0)
+            {
+                if (et.Count > 0)
+                    if (curY == et.First().Key)
+                    {
+                        foreach (var e in et.First().Value)
+                            aet.Add(e);
+                        et.Remove(curY);
+                        //MAYBE SORT HERE
+                    }
+                for (int i = 0; i < aet.Count;)
+                {
+                    if (aet[i].ymax == curY)
+                        aet.RemoveAt(i);
+                    else
+                        i++;
+                }
+                aet.Sort((p, q) => xComparator(p, q));
+
+                for (int i = 0; i + 1 < aet.Count;)
+                {
+                    int x1 = (int)aet[i].x;
+                    int x2 = (int)aet[i + 1].x;
+                    int xMax = Math.Max(x1, x2);
+                    int xMin = Math.Min(x1, x2);
+
+                    for (int j = xMin; j <= xMax; j++)
+                        paintPoint(g, j, curY, cyanBrush, 1);
+                    aet[i].x += aet[i].d;
+                    aet[i + 1].x += aet[i + 1].d;
+                    i += 2;
+                }
+                curY++;
+            }
+        }
+        public static int xComparator(Edge e1, Edge e2)
+        {
+            if (e1.x < e2.x) return -1;
+            else if (e1.x > e2.x) return 1;
+            else return 0;
+        }
     }
     public class Vertex
     {
         public float x;
         public float y;
         public float z;
-        public Vector normal;
+        public Vector3 normal;
 
         public Vertex (float x, float y, float z)
         {
             this.x = x;
             this.y = y;
             this.z = z;
-            this.normal = new Vector();
-        }
-    }
-    public class Vector
-    {
-        public float x;
-        public float y;
-        public float z;
-        
-        public Vector(float x = 0, float y = 0, float z = 0)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.normal = new Vector3();
         }
     }
     public class Polygon
@@ -377,6 +429,31 @@ namespace GK1_PROJ2
         public Polygon()
         {
             this.verticies = new List<Vertex>();
+        }
+    }
+    public class Edge
+    {
+        public float x;
+        public int ymax;
+        public float d;
+        public int ymin;
+
+        public Edge(Vertex v1, Vertex v2)
+        {
+            if (v1.y < v2.y)
+            {
+                ymin = (int)v1.y;
+                ymax = (int)v2.y;
+                x = (int)v1.x;
+            }
+            else
+            {
+                ymin = (int)v2.y;
+                ymax = (int)v1.y;
+                x = (int)v2.x;
+            }
+
+            d = (v2.x - v1.x) / (v2.y - v1.y);
         }
     }
 }
