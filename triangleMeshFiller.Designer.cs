@@ -32,6 +32,12 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.clearCanvasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadobjFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hemisphereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.coneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cylinderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.asymmetricCylinderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.visibilityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showVerticiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showEdgesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,12 +60,13 @@
             this.objectColorTextureTxtBox = new System.Windows.Forms.TextBox();
             this.objectColorLoadDefaultButton = new System.Windows.Forms.Button();
             this.lightSourceGbox = new System.Windows.Forms.GroupBox();
-            this.lightSourceAltitudeGbox = new System.Windows.Forms.GroupBox();
-            this.lightSourceAltitudeTrackBar = new System.Windows.Forms.TrackBar();
-            this.lightSourceAltitudeTxtBox = new System.Windows.Forms.TextBox();
+            this.lightStopAnimationCbox = new System.Windows.Forms.CheckBox();
             this.lightSourceColorGbox = new System.Windows.Forms.GroupBox();
             this.lightSourceColorPreview = new System.Windows.Forms.PictureBox();
             this.lightSourceChangeColorButton = new System.Windows.Forms.Button();
+            this.lightSourceAltitudeGbox = new System.Windows.Forms.GroupBox();
+            this.lightSourceAltitudeTrackBar = new System.Windows.Forms.TrackBar();
+            this.lightSourceAltitudeTxtBox = new System.Windows.Forms.TextBox();
             this.coefficientsGbox = new System.Windows.Forms.GroupBox();
             this.mGbox = new System.Windows.Forms.GroupBox();
             this.mTrackBar = new System.Windows.Forms.TrackBar();
@@ -70,7 +77,6 @@
             this.kdGbox = new System.Windows.Forms.GroupBox();
             this.kdTrackBar = new System.Windows.Forms.TrackBar();
             this.kdTxtBox = new System.Windows.Forms.TextBox();
-            this.lightStopAnimationCbox = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -82,10 +88,10 @@
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectColorSolidTxtBox)).BeginInit();
             this.lightSourceGbox.SuspendLayout();
-            this.lightSourceAltitudeGbox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lightSourceAltitudeTrackBar)).BeginInit();
             this.lightSourceColorGbox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.lightSourceColorPreview)).BeginInit();
+            this.lightSourceAltitudeGbox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lightSourceAltitudeTrackBar)).BeginInit();
             this.coefficientsGbox.SuspendLayout();
             this.mGbox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mTrackBar)).BeginInit();
@@ -102,6 +108,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearCanvasToolStripMenuItem,
             this.loadobjFileToolStripMenuItem,
+            this.selectToolStripMenuItem,
             this.visibilityToolStripMenuItem,
             this.colorDeterminationMethodToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -123,6 +130,53 @@
             this.loadobjFileToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
             this.loadobjFileToolStripMenuItem.Text = "Load .obj file ";
             this.loadobjFileToolStripMenuItem.Click += new System.EventHandler(this.loadobjFileToolStripMenuItem_Click);
+            // 
+            // selectToolStripMenuItem
+            // 
+            this.selectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.hemisphereToolStripMenuItem,
+            this.coneToolStripMenuItem,
+            this.cylinderToolStripMenuItem,
+            this.asymmetricCylinderToolStripMenuItem,
+            this.pyToolStripMenuItem});
+            this.selectToolStripMenuItem.Name = "selectToolStripMenuItem";
+            this.selectToolStripMenuItem.Size = new System.Drawing.Size(134, 20);
+            this.selectToolStripMenuItem.Text = "Choose sample figure";
+            // 
+            // hemisphereToolStripMenuItem
+            // 
+            this.hemisphereToolStripMenuItem.Name = "hemisphereToolStripMenuItem";
+            this.hemisphereToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.hemisphereToolStripMenuItem.Text = "Hemisphere";
+            this.hemisphereToolStripMenuItem.Click += new System.EventHandler(this.hemisphereToolStripMenuItem_Click);
+            // 
+            // coneToolStripMenuItem
+            // 
+            this.coneToolStripMenuItem.Name = "coneToolStripMenuItem";
+            this.coneToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.coneToolStripMenuItem.Text = "Cone";
+            this.coneToolStripMenuItem.Click += new System.EventHandler(this.coneToolStripMenuItem_Click);
+            // 
+            // cylinderToolStripMenuItem
+            // 
+            this.cylinderToolStripMenuItem.Name = "cylinderToolStripMenuItem";
+            this.cylinderToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.cylinderToolStripMenuItem.Text = "Cylinder";
+            this.cylinderToolStripMenuItem.Click += new System.EventHandler(this.cylinderToolStripMenuItem_Click);
+            // 
+            // asymmetricCylinderToolStripMenuItem
+            // 
+            this.asymmetricCylinderToolStripMenuItem.Name = "asymmetricCylinderToolStripMenuItem";
+            this.asymmetricCylinderToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.asymmetricCylinderToolStripMenuItem.Text = "Asymmetric cylinder";
+            this.asymmetricCylinderToolStripMenuItem.Click += new System.EventHandler(this.asymmetricCylinderToolStripMenuItem_Click);
+            // 
+            // pyToolStripMenuItem
+            // 
+            this.pyToolStripMenuItem.Name = "pyToolStripMenuItem";
+            this.pyToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.pyToolStripMenuItem.Text = "Pyramid";
+            this.pyToolStripMenuItem.Click += new System.EventHandler(this.pyToolStripMenuItem_Click);
             // 
             // visibilityToolStripMenuItem
             // 
@@ -442,50 +496,19 @@
             this.lightSourceGbox.TabStop = false;
             this.lightSourceGbox.Text = "Light source";
             // 
-            // lightSourceAltitudeGbox
+            // lightStopAnimationCbox
             // 
-            this.lightSourceAltitudeGbox.AutoSize = true;
-            this.lightSourceAltitudeGbox.Controls.Add(this.lightSourceAltitudeTrackBar);
-            this.lightSourceAltitudeGbox.Controls.Add(this.lightSourceAltitudeTxtBox);
-            this.lightSourceAltitudeGbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightSourceAltitudeGbox.Location = new System.Drawing.Point(3, 18);
-            this.lightSourceAltitudeGbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.lightSourceAltitudeGbox.Name = "lightSourceAltitudeGbox";
-            this.lightSourceAltitudeGbox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.lightSourceAltitudeGbox.Size = new System.Drawing.Size(130, 56);
-            this.lightSourceAltitudeGbox.TabIndex = 6;
-            this.lightSourceAltitudeGbox.TabStop = false;
-            this.lightSourceAltitudeGbox.Text = "Altitude";
-            // 
-            // lightSourceAltitudeTrackBar
-            // 
-            this.lightSourceAltitudeTrackBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightSourceAltitudeTrackBar.Location = new System.Drawing.Point(3, 36);
-            this.lightSourceAltitudeTrackBar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.lightSourceAltitudeTrackBar.Maximum = 721000;
-            this.lightSourceAltitudeTrackBar.MaximumSize = new System.Drawing.Size(0, 18);
-            this.lightSourceAltitudeTrackBar.Name = "lightSourceAltitudeTrackBar";
-            this.lightSourceAltitudeTrackBar.Size = new System.Drawing.Size(124, 18);
-            this.lightSourceAltitudeTrackBar.TabIndex = 0;
-            this.lightSourceAltitudeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.lightSourceAltitudeTrackBar.Value = 365500;
-            this.lightSourceAltitudeTrackBar.ValueChanged += new System.EventHandler(this.lightSourceAltitudeTrackBar_ValueChanged);
-            // 
-            // lightSourceAltitudeTxtBox
-            // 
-            this.lightSourceAltitudeTxtBox.BackColor = System.Drawing.SystemColors.Control;
-            this.lightSourceAltitudeTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lightSourceAltitudeTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightSourceAltitudeTxtBox.Enabled = false;
-            this.lightSourceAltitudeTxtBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lightSourceAltitudeTxtBox.Location = new System.Drawing.Point(3, 18);
-            this.lightSourceAltitudeTxtBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.lightSourceAltitudeTxtBox.Name = "lightSourceAltitudeTxtBox";
-            this.lightSourceAltitudeTxtBox.ReadOnly = true;
-            this.lightSourceAltitudeTxtBox.Size = new System.Drawing.Size(124, 18);
-            this.lightSourceAltitudeTxtBox.TabIndex = 1;
-            this.lightSourceAltitudeTxtBox.Text = "365.500";
-            this.lightSourceAltitudeTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.lightStopAnimationCbox.Appearance = System.Windows.Forms.Appearance.Button;
+            this.lightStopAnimationCbox.AutoSize = true;
+            this.lightStopAnimationCbox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lightStopAnimationCbox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lightStopAnimationCbox.Location = new System.Drawing.Point(3, 125);
+            this.lightStopAnimationCbox.Name = "lightStopAnimationCbox";
+            this.lightStopAnimationCbox.Size = new System.Drawing.Size(130, 25);
+            this.lightStopAnimationCbox.TabIndex = 7;
+            this.lightStopAnimationCbox.Text = "Stop animation";
+            this.lightStopAnimationCbox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lightStopAnimationCbox.UseVisualStyleBackColor = true;
             // 
             // lightSourceColorGbox
             // 
@@ -531,6 +554,51 @@
             this.lightSourceChangeColorButton.Text = "Change color";
             this.lightSourceChangeColorButton.UseVisualStyleBackColor = true;
             this.lightSourceChangeColorButton.Click += new System.EventHandler(this.changeColorButton_Click);
+            // 
+            // lightSourceAltitudeGbox
+            // 
+            this.lightSourceAltitudeGbox.AutoSize = true;
+            this.lightSourceAltitudeGbox.Controls.Add(this.lightSourceAltitudeTrackBar);
+            this.lightSourceAltitudeGbox.Controls.Add(this.lightSourceAltitudeTxtBox);
+            this.lightSourceAltitudeGbox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lightSourceAltitudeGbox.Location = new System.Drawing.Point(3, 18);
+            this.lightSourceAltitudeGbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lightSourceAltitudeGbox.Name = "lightSourceAltitudeGbox";
+            this.lightSourceAltitudeGbox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lightSourceAltitudeGbox.Size = new System.Drawing.Size(130, 56);
+            this.lightSourceAltitudeGbox.TabIndex = 6;
+            this.lightSourceAltitudeGbox.TabStop = false;
+            this.lightSourceAltitudeGbox.Text = "Altitude";
+            // 
+            // lightSourceAltitudeTrackBar
+            // 
+            this.lightSourceAltitudeTrackBar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lightSourceAltitudeTrackBar.Location = new System.Drawing.Point(3, 36);
+            this.lightSourceAltitudeTrackBar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lightSourceAltitudeTrackBar.Maximum = 721000;
+            this.lightSourceAltitudeTrackBar.MaximumSize = new System.Drawing.Size(0, 18);
+            this.lightSourceAltitudeTrackBar.Name = "lightSourceAltitudeTrackBar";
+            this.lightSourceAltitudeTrackBar.Size = new System.Drawing.Size(124, 18);
+            this.lightSourceAltitudeTrackBar.TabIndex = 0;
+            this.lightSourceAltitudeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.lightSourceAltitudeTrackBar.Value = 365500;
+            this.lightSourceAltitudeTrackBar.ValueChanged += new System.EventHandler(this.lightSourceAltitudeTrackBar_ValueChanged);
+            // 
+            // lightSourceAltitudeTxtBox
+            // 
+            this.lightSourceAltitudeTxtBox.BackColor = System.Drawing.SystemColors.Control;
+            this.lightSourceAltitudeTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lightSourceAltitudeTxtBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lightSourceAltitudeTxtBox.Enabled = false;
+            this.lightSourceAltitudeTxtBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lightSourceAltitudeTxtBox.Location = new System.Drawing.Point(3, 18);
+            this.lightSourceAltitudeTxtBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lightSourceAltitudeTxtBox.Name = "lightSourceAltitudeTxtBox";
+            this.lightSourceAltitudeTxtBox.ReadOnly = true;
+            this.lightSourceAltitudeTxtBox.Size = new System.Drawing.Size(124, 18);
+            this.lightSourceAltitudeTxtBox.TabIndex = 1;
+            this.lightSourceAltitudeTxtBox.Text = "365.500";
+            this.lightSourceAltitudeTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // coefficientsGbox
             // 
@@ -684,20 +752,6 @@
             this.kdTxtBox.Text = "0.500";
             this.kdTxtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // lightStopAnimationCbox
-            // 
-            this.lightStopAnimationCbox.Appearance = System.Windows.Forms.Appearance.Button;
-            this.lightStopAnimationCbox.AutoSize = true;
-            this.lightStopAnimationCbox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightStopAnimationCbox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lightStopAnimationCbox.Location = new System.Drawing.Point(3, 125);
-            this.lightStopAnimationCbox.Name = "lightStopAnimationCbox";
-            this.lightStopAnimationCbox.Size = new System.Drawing.Size(130, 25);
-            this.lightStopAnimationCbox.TabIndex = 7;
-            this.lightStopAnimationCbox.Text = "Stop animation";
-            this.lightStopAnimationCbox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lightStopAnimationCbox.UseVisualStyleBackColor = true;
-            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -732,11 +786,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.objectColorSolidTxtBox)).EndInit();
             this.lightSourceGbox.ResumeLayout(false);
             this.lightSourceGbox.PerformLayout();
+            this.lightSourceColorGbox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.lightSourceColorPreview)).EndInit();
             this.lightSourceAltitudeGbox.ResumeLayout(false);
             this.lightSourceAltitudeGbox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.lightSourceAltitudeTrackBar)).EndInit();
-            this.lightSourceColorGbox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.lightSourceColorPreview)).EndInit();
             this.coefficientsGbox.ResumeLayout(false);
             this.coefficientsGbox.PerformLayout();
             this.mGbox.ResumeLayout(false);
@@ -797,5 +851,11 @@
         private TextBox normalMapTxtBox;
         private CheckBox modifyNormalsCbutton;
         private CheckBox lightStopAnimationCbox;
+        private ToolStripMenuItem selectToolStripMenuItem;
+        private ToolStripMenuItem hemisphereToolStripMenuItem;
+        private ToolStripMenuItem coneToolStripMenuItem;
+        private ToolStripMenuItem cylinderToolStripMenuItem;
+        private ToolStripMenuItem asymmetricCylinderToolStripMenuItem;
+        private ToolStripMenuItem pyToolStripMenuItem;
     }
 }

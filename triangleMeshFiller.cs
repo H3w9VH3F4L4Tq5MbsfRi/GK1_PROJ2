@@ -31,6 +31,11 @@ namespace GK1_PROJ2
         private const int mMin = 1;
         private const int mMax = 100;
         private string path = string.Empty;
+        private static (float, float) light = (20, 20);
+        private float[,,] coefs;
+        private Vector3 lightColor;
+        // change this to generalise
+        private const int maxVerticies = 3;
 
         public mainWindow()
         {
@@ -51,6 +56,8 @@ namespace GK1_PROJ2
             maxY = float.MinValue;
             minZ = float.MaxValue;
             maxZ = float.MinValue;
+            coefs = new float[canvas.Size.Width, canvas.Size.Height, maxVerticies];
+            lightColor = new Vector3(1, 1, 1);
         }
         private void clearCanvasToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -64,15 +71,7 @@ namespace GK1_PROJ2
                 dialog.Title = "Load .obj file";
 
                 if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    clean();
-                    if (processFile(dialog.FileName))
-                    {
-                        rescaleVerticies();
-                        repaint();
-                        MessageBox.Show("Succesfully loaded " + polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
+                    loadFile(dialog.FileName);
             }
         }
         private bool processFile(string path)
@@ -233,18 +232,21 @@ namespace GK1_PROJ2
             double val = kdTrackBar.Value;
             val /= 1000;
             kdTxtBox.Text = val.ToString("0.000");
+            repaint();
         }
         private void ksTrackBar_ValueChanged(object sender, EventArgs e)
         {
             double val = ksTrackBar.Value;
             val /= 1000;
             ksTxtBox.Text = val.ToString("0.000");
+            repaint();
         }
         private void mTrackBar_ValueChanged(object sender, EventArgs e)
         {
             double val = mTrackBar.Value;
             val /= 1000;
             mTxtBox.Text = val.ToString("0.000");
+            repaint();
         }
         private void changeColorButton_Click(object sender, EventArgs e)
         {
@@ -253,7 +255,13 @@ namespace GK1_PROJ2
                 colorDialog.AllowFullOpen = true;
                 colorDialog.Color = lightSourceColorPreview.BackColor;
                 if (colorDialog.ShowDialog() == DialogResult.OK)
+                {
                     lightSourceColorPreview.BackColor = colorDialog.Color;
+                    lightColor.X = ((float)lightSourceColorPreview.BackColor.R) / 256;
+                    lightColor.Y = ((float)lightSourceColorPreview.BackColor.G) / 256;
+                    lightColor.Z = ((float)lightSourceColorPreview.BackColor.B) / 256;
+                }
+                repaint();
             }
         }
         private void showToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
@@ -278,6 +286,7 @@ namespace GK1_PROJ2
             double val = lightSourceAltitudeTrackBar.Value;
             val /= 1000;
             lightSourceAltitudeTxtBox.Text = val.ToString("0.000");
+            repaint();
         }
         private void objectColorLoadDefaultButton_Click(object sender, EventArgs e)
         {
@@ -351,11 +360,15 @@ namespace GK1_PROJ2
         }
         private void calculatedAtPointToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            calculatedAtPointToolStripMenuItem.Checked = true;
             vetrexInterpolationToolStripMenuItem.Checked = false;
+            repaint();
         }
         private void vetrexInterpolationToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            vetrexInterpolationToolStripMenuItem.Checked = true;
             calculatedAtPointToolStripMenuItem.Checked = false;
+            repaint();
         }
         private void modifyNormalsCbutton_CheckedChanged(object sender, EventArgs e)
         {
@@ -421,7 +434,7 @@ namespace GK1_PROJ2
                     int xMin = Math.Min(x1, x2);
 
                     for (int j = xMin; j <= xMax; j++)
-                        drawArea.SetPixel(j, curY, objectColor.GetPixel(j,curY));
+                        paintPixel(p, j, curY);
                     aet[i].x += aet[i].d;
                     aet[i + 1].x += aet[i + 1].d;
                     i += 2;
@@ -444,6 +457,154 @@ namespace GK1_PROJ2
         private void textureChange()
         {
             objectColor = new Bitmap(Image.FromFile(path), canvas.Size.Width, canvas.Size.Height);
+        }
+        private void calcCoefficiants()
+        {
+            coefs = new float[canvas.Size.Width, canvas.Size.Height,maxVerticies];
+
+            foreach(var p in polygons)
+            {
+                SortedDictionary<int, List<Edge>> et = new SortedDictionary<int, List<Edge>>();
+                List<Edge> aet = new List<Edge>();
+
+                for (int i = 0; i < p.verticies.Count; i++)
+                {
+                    int inext = (i + 1 == p.verticies.Count) ? 0 : i + 1;
+                    if (Math.Abs(p.verticies[inext].y - p.verticies[i].y) != 0)
+                    {
+                        var ed = new Edge(p.verticies[i], p.verticies[inext]);
+                        if (!et.ContainsKey(ed.ymin))
+                            et.Add(ed.ymin, new List<Edge>());
+                        et[ed.ymin].Add(ed);
+                    }
+                }
+
+                var curY = et.First().Key;
+                while (et.Count > 0 || aet.Count > 0)
+                {
+                    if (et.Count > 0)
+                        if (curY == et.First().Key)
+                        {
+                            foreach (var e in et.First().Value)
+                                aet.Add(e);
+                            et.Remove(curY);
+                            //MAYBE SORT HERE
+                            aet.Sort((p, q) => xComparator(p, q));
+                        }
+                    for (int i = 0; i < aet.Count;)
+                    {
+                        if (aet[i].ymax == curY)
+                            aet.RemoveAt(i);
+                        else
+                            i++;
+                    }
+                    //aet.Sort((p, q) => xComparator(p, q));
+
+                    for (int i = 0; i + 1 < aet.Count;)
+                    {
+                        int x1 = (int)aet[i].x;
+                        int x2 = (int)aet[i + 1].x;
+                        int xMax = Math.Max(x1, x2);
+                        int xMin = Math.Min(x1, x2);
+
+                        for (int j = xMin; j <= xMax; j++)
+                        {
+                            double area = 0;
+
+                            for (int k = 0; k < p.verticies.Count; k++)
+                            {
+                                int kNext = (k + 1 == p.verticies.Count) ? 0 : k + 1;
+                                float a = calcLength(p.verticies[k].x, p.verticies[k].y, p.verticies[kNext].x, p.verticies[kNext].y);
+                                float b = calcLength(p.verticies[kNext].x, p.verticies[kNext].y, j, curY);
+                                float c = calcLength(j, curY, p.verticies[k].x, p.verticies[k].y);
+                                float pe = (a + b + c) / 3;
+                                double aaaaaa = (Math.Sqrt(pe * (pe - a) * (pe - b) * (pe - c)));
+                                if (Double.IsNaN(aaaaaa))
+                                    aaaaaa = 0;
+                                coefs[j, curY, k] = (float)aaaaaa;
+                                // about to cause problems later hehe
+                                area += coefs[j, curY, k];
+                            }
+
+                            if (area > 0)
+                                for (int k = 0; k < maxVerticies; k++)
+                                {
+                                    coefs[j, curY, k] = (float)(coefs[j, curY, k] / area);
+                                    //Debug.Write(coefs[j, curY, k]);
+                                    //Debug.Write(' ');
+                                }
+                            //Debug.WriteLine(' ');
+                        }
+                        aet[i].x += aet[i].d;
+                        aet[i + 1].x += aet[i + 1].d;
+                        i += 2;
+                    }
+                    curY++;
+                }
+            }
+        }
+        private float calcLength(float x1, float y1, float x2, float y2)
+        {
+            return (float)Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
+        }
+        private void paintPixel(Polygon p, int x, int y)
+        {
+            if (calculatedAtPointToolStripMenuItem.Checked)
+            {
+                Vector3 vector = new Vector3();
+                foreach(var v in p.verticies)
+                    for(int i = 0; i < maxVerticies; i++)
+                    {
+                        vector.X += coefs[x, y, i] * v.normal.X;
+                        vector.Y += coefs[x, y, i] * v.normal.Y;
+                        vector.Z += coefs[x, y, i] * v.normal.Z;
+                    }
+
+                var color = objectColor.GetPixel(x, y);
+
+                drawArea.SetPixel(x, y, objectColor.GetPixel(x, y));
+            }
+            else
+            {
+                //
+            }
+            
+        }
+        private void loadFile(string path)
+        {
+            clean();
+            if (processFile(path))
+            {
+                rescaleVerticies();
+                calcCoefficiants();
+                repaint();
+                MessageBox.Show("Succesfully loaded " + polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        private void hemisphereToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadDefault("hemisphereAVG.obj");
+        }
+        private void coneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadDefault("coneAVG.obj");
+        }
+        private void loadDefault(string s)
+        {
+            string s2 = System.IO.Path.GetFullPath(@"..\..\..\") + "sample figures\\" + s;
+            loadFile(s2);
+        }
+        private void cylinderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadDefault("cylinderAVG.obj");
+        }
+        private void asymmetricCylinderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadDefault("2OYcylinderAVG.obj");
+        }
+        private void pyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadDefault("pyramidAVG.obj");
         }
     }
     public class Vertex
