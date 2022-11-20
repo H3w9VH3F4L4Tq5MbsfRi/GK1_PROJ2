@@ -417,10 +417,9 @@ namespace GK1_PROJ2
                     var color = objectColor.GetPixel((int)p.verticies[i].x, (int)p.verticies[i].y);
                     Vector3 colorV = new Vector3((float)color.R / 256, (float)color.G / 256, (float)color.B / 256);
                     Vector3 r = new Vector3(2 * cosNL * n.X - l.X, 2 * cosNL * n.Y - l.Y, 2 * cosNL * n.Z - l.Z);
-                    float cosVR = vv.X * r.X + vv.Y * r.Y + vv.Z * r.Z;
+                    float cosVR = (vv.X * r.X + vv.Y * r.Y + vv.Z * r.Z) / vectorLength(vv) / vectorLength(r);
                     if (cosVR < 0)
                         cosVR = 0;
-                    // fix it cosVR
                     float kd = (float)kdTrackBar.Value / 1000;
                     float ks = (float)ksTrackBar.Value / 1000;
                     float m = (float)mTrackBar.Value / 1000;
@@ -551,7 +550,7 @@ namespace GK1_PROJ2
 
                         for (int j = xMin; j <= xMax; j++)
                         {
-                            double area = 0;
+                            float area = 0;
 
                             for (int k = 0; k < p.verticies.Count; k++)
                             {
@@ -559,23 +558,14 @@ namespace GK1_PROJ2
                                 float a = calcLength(p.verticies[k].x, p.verticies[k].y, p.verticies[kNext].x, p.verticies[kNext].y);
                                 float b = calcLength(p.verticies[kNext].x, p.verticies[kNext].y, j, curY);
                                 float c = calcLength(j, curY, p.verticies[k].x, p.verticies[k].y);
-                                float pe = (a + b + c) / 3;
-                                double aaaaaa = (Math.Sqrt(pe * (pe - a) * (pe - b) * (pe - c)));
-                                if (Double.IsNaN(aaaaaa))
-                                    aaaaaa = 0;
-                                coefs[j, curY, k] = (float)aaaaaa;
-                                // about to cause problems later hehe
+                                float pe = (a + b + c) / 2;
+                                coefs[j, curY, k] = (float)(Math.Sqrt(pe * (pe - a) * (pe - b) * (pe - c)));
                                 area += coefs[j, curY, k];
                             }
 
                             if (area > 0)
                                 for (int k = 0; k < maxVerticies; k++)
-                                {
                                     coefs[j, curY, k] = (float)(coefs[j, curY, k] / area);
-                                    //Debug.Write(coefs[j, curY, k]);
-                                    //Debug.Write(' ');
-                                }
-                            //Debug.WriteLine(' ');
                         }
                         aet[i].x += aet[i].d;
                         aet[i + 1].x += aet[i + 1].d;
@@ -611,10 +601,9 @@ namespace GK1_PROJ2
             var color = objectColor.GetPixel(x, y);
             Vector3 colorV = new Vector3((float)color.R / 256, (float)color.G / 256, (float)color.B / 256);
             Vector3 r = new Vector3(2 * cosNL * n.X - l.X, 2 * cosNL * n.Y - l.Y, 2 * cosNL * n.Z - l.Z);
-            float cosVR = vv.X * r.X + vv.Y * r.Y + vv.Z * r.Z;
+            float cosVR = (vv.X * r.X + vv.Y * r.Y + vv.Z * r.Z)/vectorLength(vv)/vectorLength(r);
             if (cosVR < 0)
                 cosVR = 0;
-            // fix it cosVR
             Vector3 finalColor = new Vector3();
             float kd = (float)kdTrackBar.Value / 1000;
             float ks = (float)ksTrackBar.Value / 1000;
@@ -686,6 +675,14 @@ namespace GK1_PROJ2
         private float vectorLength(Vector3 vector)
         {
             return (float)Math.Sqrt(vector.X * vector.X + vector.Z * vector.Z + vector.Z * vector.Z);
+        }
+        private void donutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadDefault("ponczek.obj");
+        }
+        private void buttonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadDefault("guzik.obj");
         }
     }
     public class Vertex

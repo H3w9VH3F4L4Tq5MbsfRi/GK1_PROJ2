@@ -38,6 +38,8 @@
             this.cylinderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.asymmetricCylinderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.donutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.visibilityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showVerticiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showEdgesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -138,7 +140,9 @@
             this.coneToolStripMenuItem,
             this.cylinderToolStripMenuItem,
             this.asymmetricCylinderToolStripMenuItem,
-            this.pyToolStripMenuItem});
+            this.pyToolStripMenuItem,
+            this.donutToolStripMenuItem,
+            this.buttonToolStripMenuItem});
             this.selectToolStripMenuItem.Name = "selectToolStripMenuItem";
             this.selectToolStripMenuItem.Size = new System.Drawing.Size(134, 20);
             this.selectToolStripMenuItem.Text = "Choose sample figure";
@@ -177,6 +181,20 @@
             this.pyToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
             this.pyToolStripMenuItem.Text = "Pyramid";
             this.pyToolStripMenuItem.Click += new System.EventHandler(this.pyToolStripMenuItem_Click);
+            // 
+            // donutToolStripMenuItem
+            // 
+            this.donutToolStripMenuItem.Name = "donutToolStripMenuItem";
+            this.donutToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.donutToolStripMenuItem.Text = "Donut";
+            this.donutToolStripMenuItem.Click += new System.EventHandler(this.donutToolStripMenuItem_Click);
+            // 
+            // buttonToolStripMenuItem
+            // 
+            this.buttonToolStripMenuItem.Name = "buttonToolStripMenuItem";
+            this.buttonToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.buttonToolStripMenuItem.Text = "Button";
+            this.buttonToolStripMenuItem.Click += new System.EventHandler(this.buttonToolStripMenuItem_Click);
             // 
             // visibilityToolStripMenuItem
             // 
@@ -857,5 +875,7 @@
         private ToolStripMenuItem cylinderToolStripMenuItem;
         private ToolStripMenuItem asymmetricCylinderToolStripMenuItem;
         private ToolStripMenuItem pyToolStripMenuItem;
+        private ToolStripMenuItem donutToolStripMenuItem;
+        private ToolStripMenuItem buttonToolStripMenuItem;
     }
 }
