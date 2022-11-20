@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Numerics;
+using System.IO;
 
 namespace GK1_PROJ2
 {
@@ -18,9 +19,10 @@ namespace GK1_PROJ2
         private float maxY;
         private float maxZ;
         private Bitmap drawArea;
+        private Bitmap objectColor;
+        private string defaultTexture;
         private static Color canvasColor = Color.HotPink;
         private static Brush blackBrush = Brushes.Black;
-        private static Brush cyanBrush = Brushes.Cyan;
         private const int pointRadious = 4;
         private static Pen edgePen = new Pen(blackBrush, 2);
         private const int padding = 60;
@@ -28,14 +30,17 @@ namespace GK1_PROJ2
         private const int kMax = 0;
         private const int mMin = 1;
         private const int mMax = 100;
+        private string path = string.Empty;
 
         public mainWindow()
         {
             InitializeComponent();
+            defaultTexture = System.IO.Path.GetFullPath(@"..\..\..\") + "\\default_object_color.jpg";
             vertices = new List<Vertex>();
             polygons = new List<Polygon>();
             normals = new List<Vector3>();
             drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
+            objectColor = new Bitmap(Image.FromFile(defaultTexture), canvas.Size.Width, canvas.Size.Height);
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
                 g.Clear(canvasColor);
@@ -278,6 +283,7 @@ namespace GK1_PROJ2
         {
             objectColorSolidModeRbutton.Checked = false;
             objectColorTextureModeRbutton.Checked = false;
+            objectColor = new Bitmap(Image.FromFile(defaultTexture), canvas.Size.Width, canvas.Size.Height);
             repaint();
         }
         private void objectColorSolidModeRbutton_CheckedChanged(object sender, EventArgs e)
@@ -287,6 +293,7 @@ namespace GK1_PROJ2
                 objectColorSolidChangeButton.Enabled = true;
             else
                 objectColorSolidChangeButton.Enabled = false;
+            colorChange();
             repaint();
         }
         private void objectColorTextureModeRbutton_CheckedChanged(object sender, EventArgs e)
@@ -296,7 +303,11 @@ namespace GK1_PROJ2
                 objectColorTextureLoadButton.Enabled = true;
             else
                 objectColorTextureLoadButton.Enabled = false;
-            repaint();
+            if (path != string.Empty)
+            {
+                textureChange();
+                repaint();
+            }
         }
         private void objectColorSolidChangeButton_Click(object sender, EventArgs e)
         {
@@ -307,6 +318,7 @@ namespace GK1_PROJ2
                 if (colorDialog.ShowDialog() == DialogResult.OK)
                 {
                     objectColorSolidTxtBox.BackColor = colorDialog.Color;
+                    colorChange();
                     repaint();
                 }  
             }
@@ -316,9 +328,25 @@ namespace GK1_PROJ2
             using (var dialog = new OpenFileDialog())
             {
                 dialog.Title = "Load texture";
+                dialog.Filter = "All files (*.*)|*.*";
 
                 if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    var exPath = path;
+                    path = dialog.FileName;
+                    try
+                    {
+                        textureChange();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Unable to load selected image file.", "Exeption while loading", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        path = exPath;
+                        return;
+                    }
                     objectColorTextureTxtBox.Text = "Loaded";
+                    repaint();
+                }
             }
         }
         private void calculatedAtPointToolStripMenuItem_Click(object sender, EventArgs e)
@@ -374,6 +402,7 @@ namespace GK1_PROJ2
                             aet.Add(e);
                         et.Remove(curY);
                         //MAYBE SORT HERE
+                        aet.Sort((p, q) => xComparator(p, q));
                     }
                 for (int i = 0; i < aet.Count;)
                 {
@@ -382,7 +411,7 @@ namespace GK1_PROJ2
                     else
                         i++;
                 }
-                aet.Sort((p, q) => xComparator(p, q));
+                //aet.Sort((p, q) => xComparator(p, q));
 
                 for (int i = 0; i + 1 < aet.Count;)
                 {
@@ -392,7 +421,7 @@ namespace GK1_PROJ2
                     int xMin = Math.Min(x1, x2);
 
                     for (int j = xMin; j <= xMax; j++)
-                        paintPoint(g, j, curY, cyanBrush, 1);
+                        drawArea.SetPixel(j, curY, objectColor.GetPixel(j,curY));
                     aet[i].x += aet[i].d;
                     aet[i + 1].x += aet[i + 1].d;
                     i += 2;
@@ -400,11 +429,21 @@ namespace GK1_PROJ2
                 curY++;
             }
         }
-        public static int xComparator(Edge e1, Edge e2)
+        private static int xComparator(Edge e1, Edge e2)
         {
             if (e1.x < e2.x) return -1;
             else if (e1.x > e2.x) return 1;
             else return 0;
+        }
+        private void colorChange()
+        {
+            using (Graphics g = Graphics.FromImage(objectColor))
+                using (Brush brush = new SolidBrush(objectColorSolidTxtBox.BackColor))
+                    g.FillRectangle(brush, 0, 0, objectColor.Width, objectColor.Height);
+        }
+        private void textureChange()
+        {
+            objectColor = new Bitmap(Image.FromFile(path), canvas.Size.Width, canvas.Size.Height);
         }
     }
     public class Vertex
