@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FastBitmapLib" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="sample figures\2OYcylinderAVG.obj">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

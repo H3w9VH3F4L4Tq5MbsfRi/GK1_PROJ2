@@ -4,6 +4,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Numerics;
 using System.IO;
+using System.Runtime.Intrinsics;
 
 namespace GK1_PROJ2
 {
@@ -31,9 +32,10 @@ namespace GK1_PROJ2
         private const int mMin = 1;
         private const int mMax = 100;
         private string path = string.Empty;
-        private static (float, float) light = (20, 20);
+        private static (float x, float y) light = (20, 20);
         private float[,,] coefs;
         private Vector3 lightColor;
+        private static Vector3 vv = new Vector3(0, 0, 1);
         // change this to generalise
         private const int maxVerticies = 3;
 
@@ -175,9 +177,9 @@ namespace GK1_PROJ2
                 v.y += center.y;
                 v.z += minZ;
                 v.z *= k;
-                v.normal.X *= k;
-                v.normal.Y *= k;
-                v.normal.Z *= k;
+                //v.normal.X *= k;
+                //v.normal.Y *= k;
+                //v.normal.Z *= k;
             }
         }
         private void repaint()
@@ -392,6 +394,7 @@ namespace GK1_PROJ2
         {
             SortedDictionary<int,List<Edge>> et = new SortedDictionary<int,List<Edge>>();
             List<Edge> aet = new List<Edge>();
+            Vector3[] colors = new Vector3[maxVerticies];
 
             for (int i = 0; i < p.verticies.Count; i++)
             {
@@ -402,6 +405,29 @@ namespace GK1_PROJ2
                     if (!et.ContainsKey(ed.ymin))
                         et.Add(ed.ymin, new List<Edge>());
                     et[ed.ymin].Add(ed);
+                }
+                if (vetrexInterpolationToolStripMenuItem.Checked)
+                {
+                    Vector3 n = normaliseVector(p.verticies[i].normal);
+                    float ls = (float)lightSourceAltitudeTrackBar.Value / 1000;
+                    Vector3 l = normaliseVector(new Vector3(light.x - p.verticies[i].x, light.y - p.verticies[i].y, ls - p.verticies[i].z));
+                    float cosNL = n.X * l.X + n.Y * l.Y + n.Z * l.Z;
+                    if (cosNL < 0)
+                        cosNL = 0;
+                    var color = objectColor.GetPixel((int)p.verticies[i].x, (int)p.verticies[i].y);
+                    Vector3 colorV = new Vector3((float)color.R / 256, (float)color.G / 256, (float)color.B / 256);
+                    Vector3 r = new Vector3(2 * cosNL * n.X - l.X, 2 * cosNL * n.Y - l.Y, 2 * cosNL * n.Z - l.Z);
+                    float cosVR = vv.X * r.X + vv.Y * r.Y + vv.Z * r.Z;
+                    if (cosVR < 0)
+                        cosVR = 0;
+                    // fix it cosVR
+                    float kd = (float)kdTrackBar.Value / 1000;
+                    float ks = (float)ksTrackBar.Value / 1000;
+                    float m = (float)mTrackBar.Value / 1000;
+                    float coe = (float)(kd * cosNL + ks * Math.Pow(cosVR, m));
+                    colors[i].X = lightColor.X * colorV.X * coe * 256;
+                    colors[i].Y = lightColor.Y * colorV.Y * coe * 256;
+                    colors[i].Z = lightColor.Z * colorV.Z * coe * 256;
                 }
             }
 
@@ -434,7 +460,23 @@ namespace GK1_PROJ2
                     int xMin = Math.Min(x1, x2);
 
                     for (int j = xMin; j <= xMax; j++)
-                        paintPixel(p, j, curY);
+                    {
+                        if (calculatedAtPointToolStripMenuItem.Checked)
+                            calculateAndPaintColor(p, j, curY);
+                        else
+                        {
+                            Vector3 finalColor = new Vector3(0, 0, 0);
+                            for (int k = 0; k < p.verticies.Count; k++)
+                            {
+                                finalColor.X += coefs[j, curY, k] * colors[k].X;
+                                finalColor.Y += coefs[j, curY, k] * colors[k].Y;
+                                finalColor.Z += coefs[j, curY, k] * colors[k].Z;
+                            }
+                            Color colorF = new Color();
+                            colorF = Color.FromArgb((byte)255, (byte)finalColor.X, (byte)finalColor.Y, (byte)finalColor.Z);
+                            drawArea.SetPixel(j, curY, colorF);
+                        }
+                    }
                     aet[i].x += aet[i].d;
                     aet[i + 1].x += aet[i + 1].d;
                     i += 2;
@@ -547,28 +589,43 @@ namespace GK1_PROJ2
         {
             return (float)Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
         }
-        private void paintPixel(Polygon p, int x, int y)
+        private void calculateAndPaintColor(Polygon p, int x, int y)
         {
-            if (calculatedAtPointToolStripMenuItem.Checked)
-            {
-                Vector3 vector = new Vector3();
-                foreach(var v in p.verticies)
-                    for(int i = 0; i < maxVerticies; i++)
-                    {
-                        vector.X += coefs[x, y, i] * v.normal.X;
-                        vector.Y += coefs[x, y, i] * v.normal.Y;
-                        vector.Z += coefs[x, y, i] * v.normal.Z;
-                    }
+            Vector3 vector = new Vector3();
+            float z = 0;
 
-                var color = objectColor.GetPixel(x, y);
-
-                drawArea.SetPixel(x, y, objectColor.GetPixel(x, y));
-            }
-            else
+            for(int i = 0; i < p.verticies.Count; i++)
             {
-                //
+                vector.X += coefs[x, y, i] * p.verticies[i].normal.X;
+                vector.Y += coefs[x, y, i] * p.verticies[i].normal.Y;
+                vector.Z += coefs[x, y, i] * p.verticies[i].normal.Z;
+                z += coefs[x, y, i] * p.verticies[i].z;
             }
-            
+
+            Vector3 n = normaliseVector(vector);
+            float ls = (float)lightSourceAltitudeTrackBar.Value / 1000;
+            Vector3 l = normaliseVector(new Vector3(light.x - x, light.y - y, ls - z));
+            float cosNL = n.X * l.X + n.Y * l.Y + n.Z * l.Z;
+            if (cosNL < 0)
+                cosNL = 0;
+            var color = objectColor.GetPixel(x, y);
+            Vector3 colorV = new Vector3((float)color.R / 256, (float)color.G / 256, (float)color.B / 256);
+            Vector3 r = new Vector3(2 * cosNL * n.X - l.X, 2 * cosNL * n.Y - l.Y, 2 * cosNL * n.Z - l.Z);
+            float cosVR = vv.X * r.X + vv.Y * r.Y + vv.Z * r.Z;
+            if (cosVR < 0)
+                cosVR = 0;
+            // fix it cosVR
+            Vector3 finalColor = new Vector3();
+            float kd = (float)kdTrackBar.Value / 1000;
+            float ks = (float)ksTrackBar.Value / 1000;
+            float m = (float)mTrackBar.Value / 1000;
+            float coe = (float)(kd * cosNL + ks * Math.Pow(cosVR, m));
+            finalColor.X = lightColor.X * colorV.X * coe * 256;
+            finalColor.Y = lightColor.Y * colorV.Y * coe * 256;
+            finalColor.Z = lightColor.Z * colorV.Z * coe * 256;
+            Color colorF = new Color();
+            colorF = Color.FromArgb((byte)255, (byte)finalColor.X, (byte)finalColor.Y, (byte)finalColor.Z);
+            drawArea.SetPixel(x, y, colorF);
         }
         private void loadFile(string path)
         {
@@ -576,6 +633,7 @@ namespace GK1_PROJ2
             if (processFile(path))
             {
                 rescaleVerticies();
+                normaliseVectors();
                 calcCoefficiants();
                 repaint();
                 MessageBox.Show("Succesfully loaded " + polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -605,6 +663,29 @@ namespace GK1_PROJ2
         private void pyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             loadDefault("pyramidAVG.obj");
+        }
+        private void normaliseVectors()
+        {
+            foreach(var p in polygons)
+                foreach(var v in p.verticies)
+                {
+                    float len = (float)Math.Sqrt(v.normal.X * v.normal.X + v.normal.Y * v.normal.Y + v.normal.Z * v.normal.Z);
+                    v.normal.X /= len;
+                    v.normal.Y /= len;
+                    v.normal.Z /= len;
+                }
+        }
+        private Vector3 normaliseVector(Vector3 normal)
+        {
+            float len = (float)Math.Sqrt(normal.X * normal.X + normal.Y * normal.Y + normal.Z * normal.Z);
+            normal.X /= len;
+            normal.Y /= len;
+            normal.Z /= len;
+            return normal;
+        }
+        private float vectorLength(Vector3 vector)
+        {
+            return (float)Math.Sqrt(vector.X * vector.X + vector.Z * vector.Z + vector.Z * vector.Z);
         }
     }
     public class Vertex
