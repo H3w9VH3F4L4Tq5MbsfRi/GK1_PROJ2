@@ -5,6 +5,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Numerics;
 using System.IO;
 using System.Runtime.Intrinsics;
+using FastBitmapLib;
 
 namespace GK1_PROJ2
 {
@@ -184,14 +185,18 @@ namespace GK1_PROJ2
         }
         private void repaint()
         {
-            using (Graphics g = Graphics.FromImage(drawArea))
+            using (var fastbitmap = drawArea.FastLock())
             {
-                g.Clear(canvasColor);
+                fastbitmap.Clear(canvasColor);
 
                 foreach (var p in polygons)
-                    fillpolygon(g,p);
+                    fillpolygon(p, fastbitmap);
+            }
 
-                foreach(var p in polygons)
+            using (Graphics g = Graphics.FromImage(drawArea))
+            {
+
+                foreach (var p in polygons)
                 {
                     for (int i = 0; i < p.verticies.Count; i++)
                     {
@@ -207,6 +212,7 @@ namespace GK1_PROJ2
                     }
                 }
             }
+
             canvas.Refresh();
         }
         private void paintPoint(Graphics g, float x, float y, Brush color, int rad = pointRadious)
@@ -390,7 +396,7 @@ namespace GK1_PROJ2
                     normalMapTxtBox.Text = "Loaded";
             }
         }
-        private void fillpolygon(Graphics g, Polygon p)
+        private void fillpolygon(Polygon p, FastBitmap f)
         {
             SortedDictionary<int,List<Edge>> et = new SortedDictionary<int,List<Edge>>();
             List<Edge> aet = new List<Edge>();
@@ -461,7 +467,7 @@ namespace GK1_PROJ2
                     for (int j = xMin; j <= xMax; j++)
                     {
                         if (calculatedAtPointToolStripMenuItem.Checked)
-                            calculateAndPaintColor(p, j, curY);
+                            calculateAndPaintColor(p, j, curY, f);
                         else
                         {
                             Vector3 finalColor = new Vector3(0, 0, 0);
@@ -473,7 +479,7 @@ namespace GK1_PROJ2
                             }
                             Color colorF = new Color();
                             colorF = Color.FromArgb((byte)255, (byte)finalColor.X, (byte)finalColor.Y, (byte)finalColor.Z);
-                            drawArea.SetPixel(j, curY, colorF);
+                            f.SetPixel(j, curY, colorF);
                         }
                     }
                     aet[i].x += aet[i].d;
@@ -579,7 +585,7 @@ namespace GK1_PROJ2
         {
             return (float)Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
         }
-        private void calculateAndPaintColor(Polygon p, int x, int y)
+        private void calculateAndPaintColor(Polygon p, int x, int y, FastBitmap f)
         {
             Vector3 vector = new Vector3();
             float z = 0;
@@ -614,7 +620,7 @@ namespace GK1_PROJ2
             finalColor.Z = lightColor.Z * colorV.Z * coe * 256;
             Color colorF = new Color();
             colorF = Color.FromArgb((byte)255, (byte)finalColor.X, (byte)finalColor.Y, (byte)finalColor.Z);
-            drawArea.SetPixel(x, y, colorF);
+            f.SetPixel(x, y, colorF);
         }
         private void loadFile(string path)
         {
