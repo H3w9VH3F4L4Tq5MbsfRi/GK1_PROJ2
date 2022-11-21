@@ -8,6 +8,7 @@ using System.Runtime.Intrinsics;
 using FastBitmapLib;
 using System;
 using System.Drawing;
+using static System.Windows.Forms.AxHost;
 
 namespace GK1_PROJ2
 {
@@ -39,6 +40,7 @@ namespace GK1_PROJ2
         private string path = string.Empty;
         private (int x, int y) light = (360, 12);
         private int state = 0;
+        private const int maxState = 15;
         private bool reverse = false;
         private float[,,] coefs;
         private Vector3 lightColor;
@@ -423,7 +425,6 @@ namespace GK1_PROJ2
 
             using (Graphics g = Graphics.FromImage(drawArea))
             {
-
                 foreach (var p in polygons)
                 {
                     for (int i = 0; i < p.verticies.Count; i++)
@@ -472,9 +473,8 @@ namespace GK1_PROJ2
         }
         private void clean()
         {
-            vertices = new List<Vertex>();
-            polygons = new List<Polygon>();
-            normals = new List<Vector3>();
+            if (active)
+                terminate = true;
             drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
@@ -485,8 +485,9 @@ namespace GK1_PROJ2
             maxY = float.MinValue;
             minZ = float.MaxValue;
             maxZ = float.MinValue;
-            if (active)
-                terminate = true;
+            vertices = new List<Vertex>();
+            polygons = new List<Polygon>();
+            normals = new List<Vector3>();
         }
         private void recalcSliders()
         {
@@ -659,17 +660,22 @@ namespace GK1_PROJ2
 
                         for (int j = xMin; j <= xMax; j++)
                         {
+                            // actuall baricenter calculations
+                            if (maxVerticies != 3)
+                                throw new Exception("Generalisation not implemented");
+
                             float area = 0;
 
                             for (int k = 0; k < p.verticies.Count; k++)
                             {
                                 int kNext = (k + 1 == p.verticies.Count) ? 0 : k + 1;
+                                int kkNext = (kNext + 1 == p.verticies.Count) ? 0 : kNext + 1;
                                 float a = calcLength(p.verticies[k].x, p.verticies[k].y, p.verticies[kNext].x, p.verticies[kNext].y);
                                 float b = calcLength(p.verticies[kNext].x, p.verticies[kNext].y, j, curY);
                                 float c = calcLength(j, curY, p.verticies[k].x, p.verticies[k].y);
                                 float pe = (a + b + c) / 2;
-                                coefs[j, curY, k] = (float)(Math.Sqrt(pe * (pe - a) * (pe - b) * (pe - c)));
-                                area += coefs[j, curY, k];
+                                coefs[j, curY, kkNext] = (float)(Math.Sqrt(pe * (pe - a) * (pe - b) * (pe - c)));
+                                area += coefs[j, curY, kkNext];
                             }
 
                             if (area > 0)
@@ -804,13 +810,13 @@ namespace GK1_PROJ2
                         realCoords = (0, -mLength);
                         break;
                     }
-                case 1: 
+                case 1:
                     {
                         int x = (int)Math.Sqrt(mLength * mLength / 5);
                         realCoords = (x, -2 * x);
                         break;
                     }
-                case 2: 
+                case 2:
                     {
                         int x = (int)Math.Sqrt(mLength * mLength / 2);
                         realCoords = (x, -x);
