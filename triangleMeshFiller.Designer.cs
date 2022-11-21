@@ -46,6 +46,7 @@
             this.colorDeterminationMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.calculatedAtPointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vetrexInterpolationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enableAnimationMusicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.canvas = new System.Windows.Forms.PictureBox();
             this.normalsGbox = new System.Windows.Forms.GroupBox();
@@ -112,7 +113,8 @@
             this.loadobjFileToolStripMenuItem,
             this.selectToolStripMenuItem,
             this.visibilityToolStripMenuItem,
-            this.colorDeterminationMethodToolStripMenuItem});
+            this.colorDeterminationMethodToolStripMenuItem,
+            this.enableAnimationMusicToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(861, 24);
@@ -252,6 +254,15 @@
             this.vetrexInterpolationToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.vetrexInterpolationToolStripMenuItem.Text = "Vetrex interpolation";
             this.vetrexInterpolationToolStripMenuItem.Click += new System.EventHandler(this.vetrexInterpolationToolStripMenuItem_Click);
+            // 
+            // enableAnimationMusicToolStripMenuItem
+            // 
+            this.enableAnimationMusicToolStripMenuItem.Checked = true;
+            this.enableAnimationMusicToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.enableAnimationMusicToolStripMenuItem.Name = "enableAnimationMusicToolStripMenuItem";
+            this.enableAnimationMusicToolStripMenuItem.Size = new System.Drawing.Size(146, 20);
+            this.enableAnimationMusicToolStripMenuItem.Text = "Enable animation music";
+            this.enableAnimationMusicToolStripMenuItem.Click += new System.EventHandler(this.enableAnimationMusicToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -878,5 +889,6 @@
         private ToolStripMenuItem pyToolStripMenuItem;
         private ToolStripMenuItem donutToolStripMenuItem;
         private ToolStripMenuItem buttonToolStripMenuItem;
+        private ToolStripMenuItem enableAnimationMusicToolStripMenuItem;
     }
 }

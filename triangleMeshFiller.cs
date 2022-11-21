@@ -9,6 +9,9 @@ using FastBitmapLib;
 using System;
 using System.Drawing;
 using static System.Windows.Forms.AxHost;
+using System.Media;
+using NAudio.Wave;
+using NAudio.Gui;
 
 namespace GK1_PROJ2
 {
@@ -56,7 +59,7 @@ namespace GK1_PROJ2
         private bool active = false;
         private bool colorChangePending = false;
         private bool usingModifiedNormals = false;
-
+        private bool musicPlaying = false;
         public mainWindow()
         {
             InitializeComponent();
@@ -902,6 +905,13 @@ namespace GK1_PROJ2
         }
         private void animation()
         {
+            bool playing = false;
+            string music = System.IO.Path.GetFullPath(@"..\..\..\") + "\\animation_music.mp3";
+            IWavePlayer waveOutDevice = new WaveOut();
+            AudioFileReader audioFileReader = new AudioFileReader(music);
+            waveOutDevice.Init(audioFileReader);
+            //waveOutDevice.PlaybackStopped += endOfMusicEventHandler();
+
             active = true;
             while (!terminate) 
             {
@@ -909,10 +919,32 @@ namespace GK1_PROJ2
                 {
                     moveLightSource();
                     repaint();
+                    if (!playing && musicPlaying)
+                    {
+                        waveOutDevice.Play();
+                        playing = true;
+                    }
+                }
+                else
+                {
+                    if (playing)
+                    {
+                        waveOutDevice.Stop();
+                        playing = false;
+                    }
+                }
+                if (playing && !musicPlaying)
+                {
+                    waveOutDevice.Stop();
+                    playing = false;
                 }
             }
+
             terminate = false;
             active = false;
+            waveOutDevice.Stop();
+            audioFileReader.Dispose();
+            waveOutDevice.Dispose();
             repaint();
             return;
         }
@@ -936,6 +968,15 @@ namespace GK1_PROJ2
                         Vector3 res = new Vector3(t.X * nTexture.X + b.X * nTexture.Y + nSurface.X * nTexture.Z, t.Y * nTexture.X + b.Y * nTexture.Y + nSurface.Y * nTexture.Z, t.Z * nTexture.X + b.Z * nTexture.Y + nSurface.Z * nTexture.Z);
                         v.mNormal = normaliseVector(res);
                     }
+        }
+        private void enableAnimationMusicToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            musicPlaying = !musicPlaying;
+
+            if (musicPlaying)
+                enableAnimationMusicToolStripMenuItem.Text = "Disable animation music";
+            else
+                enableAnimationMusicToolStripMenuItem.Text = "Enable animation music";
         }
     }
     public class Vertex
