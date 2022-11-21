@@ -53,6 +53,7 @@ namespace GK1_PROJ2
         private bool terminate = false;
         private bool active = false;
         private bool colorChangePending = false;
+        private bool usingModifiedNormals = false;
 
         public mainWindow()
         {
@@ -237,9 +238,15 @@ namespace GK1_PROJ2
         {
             var casted = (CheckBox)sender;
             if (casted.Checked)
+            {
                 normalMapLoadButton.Enabled = true;
+                usingModifiedNormals = true;
+            }
             else
+            {
                 normalMapLoadButton.Enabled = false;
+                usingModifiedNormals = false;
+            } 
         }
         private void normalMapLoadButton_Click(object sender, EventArgs e)
         {
@@ -248,7 +255,20 @@ namespace GK1_PROJ2
                 dialog.Title = "Load normal map";
 
                 if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        modifyNormals(dialog.FileName);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Unable to load selected nmap file.", "Exeption while loading", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                     normalMapTxtBox.Text = "Loaded";
+                    if (lightStopAnimationCbox.Checked)
+                        repaint();
+                }
             }
         }
         private void hemisphereToolStripMenuItem_Click(object sender, EventArgs e)
@@ -503,7 +523,11 @@ namespace GK1_PROJ2
                 }
                 if (vetrexInterpolationToolStripMenuItem.Checked)
                 {
-                    Vector3 n = normaliseVector(p.verticies[i].normal);
+                    Vector3 n;
+                    if (!usingModifiedNormals)
+                        n = normaliseVector(p.verticies[i].normal);
+                    else
+                        n = normaliseVector(p.verticies[i].mNormal);
                     Vector3 l = normaliseVector(new Vector3(light.x - p.verticies[i].x, light.y - p.verticies[i].y, lightSourceZ - p.verticies[i].z));
                     float cosNL = n.X * l.X + n.Y * l.Y + n.Z * l.Z;
                     if (cosNL < 0)
@@ -669,13 +693,22 @@ namespace GK1_PROJ2
             Vector3 vector = new Vector3();
             float z = 0;
 
-            for(int i = 0; i < p.verticies.Count; i++)
-            {
-                vector.X += coefs[x, y, i] * p.verticies[i].normal.X;
-                vector.Y += coefs[x, y, i] * p.verticies[i].normal.Y;
-                vector.Z += coefs[x, y, i] * p.verticies[i].normal.Z;
-                z += coefs[x, y, i] * p.verticies[i].z;
-            }
+            if (!usingModifiedNormals)
+                for (int i = 0; i < p.verticies.Count; i++)
+                {
+                    vector.X += coefs[x, y, i] * p.verticies[i].normal.X;
+                    vector.Y += coefs[x, y, i] * p.verticies[i].normal.Y;
+                    vector.Z += coefs[x, y, i] * p.verticies[i].normal.Z;
+                    z += coefs[x, y, i] * p.verticies[i].z;
+                }
+            else
+                for (int i = 0; i < p.verticies.Count; i++)
+                {
+                    vector.X += coefs[x, y, i] * p.verticies[i].mNormal.X;
+                    vector.Y += coefs[x, y, i] * p.verticies[i].mNormal.Y;
+                    vector.Z += coefs[x, y, i] * p.verticies[i].mNormal.Z;
+                    z += coefs[x, y, i] * p.verticies[i].z;
+                }
 
             Vector3 n = normaliseVector(vector);
             Vector3 l = normaliseVector(new Vector3(light.x - x, light.y - y, lightSourceZ - z));
@@ -725,6 +758,7 @@ namespace GK1_PROJ2
                     v.normal.X /= len;
                     v.normal.Y /= len;
                     v.normal.Z /= len;
+                    v.mNormal = v.normal;
                 }
         }
         private Vector3 normaliseVector(Vector3 normal)
@@ -876,6 +910,27 @@ namespace GK1_PROJ2
             repaint();
             return;
         }
+        private void modifyNormals(string path)
+        {
+            var nmap = new Bitmap(Image.FromFile(path), canvas.Size.Width, canvas.Size.Height);
+
+            using (var fastbitmap = nmap.FastLock())
+                foreach (var p in polygons)
+                    foreach(var v in p.verticies)
+                    {
+                        var color = fastbitmap.GetPixel((int)v.x, (int)v.y);
+                        Vector3 nTexture = new Vector3((float)color.R / 128 - 1, (float)color.G / 128 - 1, (float)color.B / 256);
+                        Vector3 nSurface = normaliseVector(v.normal);
+                        Vector3 b;
+                        if (nSurface.X == 0 && nSurface.Y == 0 && nSurface.Z == 1)
+                            b = new Vector3(0, 1, 0);
+                        else
+                            b = new Vector3(nSurface.Y, -nSurface.X, 0);
+                        Vector3 t = new Vector3(b.Y * nSurface.Z - b.Z * nSurface.Y, b.Z * nSurface.X - b.X * nSurface.Z, b.X * nSurface.Y - b.Y * nSurface.X);
+                        Vector3 res = new Vector3(t.X * nTexture.X + b.X * nTexture.Y + nSurface.X * nTexture.Z, t.Y * nTexture.X + b.Y * nTexture.Y + nSurface.Y * nTexture.Z, t.Z * nTexture.X + b.Z * nTexture.Y + nSurface.Z * nTexture.Z);
+                        v.mNormal = normaliseVector(res);
+                    }
+        }
     }
     public class Vertex
     {
@@ -883,6 +938,7 @@ namespace GK1_PROJ2
         public float y;
         public float z;
         public Vector3 normal;
+        public Vector3 mNormal;
 
         public Vertex (float x, float y, float z)
         {
@@ -890,6 +946,7 @@ namespace GK1_PROJ2
             this.y = y;
             this.z = z;
             this.normal = new Vector3();
+            this.mNormal = new Vector3();
         }
     }
     public class Polygon
