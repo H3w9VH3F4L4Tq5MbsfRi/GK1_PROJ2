@@ -40,7 +40,7 @@ namespace GK1_PROJ2
         private const int kMax = 0;
         private const int mMin = 1;
         private const int mMax = 100;
-        private string path = string.Empty;
+        private string texturePath = string.Empty;
         private (int x, int y) light = (360, 12);
         private int state = 0;
         private const int maxState = 15;
@@ -175,7 +175,7 @@ namespace GK1_PROJ2
                 objectColorTextureLoadButton.Enabled = true;
             else
                 objectColorTextureLoadButton.Enabled = false;
-            if (path != string.Empty)
+            if (texturePath != string.Empty)
             {
                 textureChange();
                 if (lightStopAnimationCbox.Checked)
@@ -207,8 +207,8 @@ namespace GK1_PROJ2
 
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    var exPath = path;
-                    path = dialog.FileName;
+                    var exPath = texturePath;
+                    texturePath = dialog.FileName;
                     try
                     {
                         textureChange();
@@ -216,7 +216,7 @@ namespace GK1_PROJ2
                     catch
                     {
                         MessageBox.Show("Unable to load selected image file.", "Exeption while loading", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        path = exPath;
+                        texturePath = exPath;
                         return;
                     }
                     objectColorTextureTxtBox.Text = "Loaded";
@@ -610,7 +610,7 @@ namespace GK1_PROJ2
         }          
         private void textureChange()
         {
-            objectColor = new Bitmap(Image.FromFile(path), canvas.Size.Width, canvas.Size.Height);
+            objectColor = new Bitmap(Image.FromFile(texturePath), canvas.Size.Width, canvas.Size.Height);
         }
         private void calcCoefficiants()
         {
@@ -948,9 +948,9 @@ namespace GK1_PROJ2
             repaint();
             return;
         }
-        private void modifyNormals(string path)
+        private void modifyNormals(string pa)
         {
-            var nmap = new Bitmap(Image.FromFile(path), canvas.Size.Width, canvas.Size.Height);
+            var nmap = new Bitmap(Image.FromFile(pa), canvas.Size.Width, canvas.Size.Height);
 
             using (var fastbitmap = nmap.FastLock())
                 foreach (var p in polygons)
