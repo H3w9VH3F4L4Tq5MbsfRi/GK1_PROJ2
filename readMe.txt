@@ -11,7 +11,7 @@ Visibility:
 	LPM otwiera opcje wyświetlania wierzchołków "Show verticies" oraz krawędzi "Show edges" w figurze. Odznaczenie/zaznaczenie spowoduje przeładowanie rysunku, aby ten odzwierciedlał (nowe) parametry wyświetlania.
 Color determination method:
 	LPM otwiera opcje wyliczania koloru w punkcie: "Calculated at point" - metoda z użyciem interpolacji wektorów normalnych z wierzchołków lub "Vertex interpolation" - metoda interpolująca kolor z wierzchołków. Opcje są wyłączne ze sobą (tylko jedna może być zaznaczona).
-Enable animation music:
+Enable music:
 	LPM włączy podkład muzyczny (Dead or Alive - You spin me round) podczas wykonywania animacji. Ponowne naciśnięcie LPM wyłączy tą opcję.
 
 TOOLBAR:

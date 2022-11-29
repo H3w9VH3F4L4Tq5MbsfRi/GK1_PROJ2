@@ -12,6 +12,7 @@ using static System.Windows.Forms.AxHost;
 using System.Media;
 using NAudio.Wave;
 using NAudio.Gui;
+using System.Xml.Serialization;
 
 namespace GK1_PROJ2
 {
@@ -29,7 +30,7 @@ namespace GK1_PROJ2
         private Bitmap drawArea;
         private Bitmap objectColor;
         private string defaultTexture;
-        private static Color canvasColor = Color.White;
+        private static Color canvasColor = Color.HotPink;
         private static Brush blackBrush = Brushes.Black;
         private static Brush yellowBrush = Brushes.Yellow;
         private const int pointRadious = 4;
@@ -55,19 +56,28 @@ namespace GK1_PROJ2
         private bool colorChangePending = false;
         private bool usingModifiedNormals = false;
         private bool musicPlaying = false;
+        private Polygon cloud;
+        private bool cloudReverse = false;
+        private float cloudStep = 10;
+        private bool cloudEnabled = false;
+        private static Color cloudColor = Color.Blue;
+        private Polygon shade = new Polygon();
+        private static Color shadeColor = Color.Black;
+        private Bitmap cloudTexture;
         public mainWindow()
         {
             InitializeComponent();
             defaultTexture = System.IO.Path.GetFullPath(@"..\..\..\") + "\\default_object_color.jpg";
+            string cloudString = System.IO.Path.GetFullPath(@"..\..\..\") + "\\cloud.jpg";
             vertices = new List<Vertex>();
             polygons = new List<Polygon>();
             normals = new List<Vector3>();
             drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             objectColor = new Bitmap(Image.FromFile(defaultTexture), canvas.Size.Width, canvas.Size.Height);
+            cloudTexture = new Bitmap(Image.FromFile(cloudString), canvas.Size.Width, canvas.Size.Height);
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
                 g.Clear(canvasColor);
-            recalcSliders();
             minX = float.MaxValue;
             maxX = float.MinValue;
             minY = float.MaxValue;
@@ -76,6 +86,14 @@ namespace GK1_PROJ2
             maxZ = float.MinValue;
             coefs = new float[canvas.Size.Width, canvas.Size.Height, maxVerticies];
             lightColor = new Vector3(1, 1, 1);
+            cloud = new Polygon();
+            cloud.verticies.Add(new Vertex(100, 200, 150));
+            cloud.verticies.Add(new Vertex(150, 250, 150));
+            cloud.verticies.Add(new Vertex(250, 250, 150));
+            cloud.verticies.Add(new Vertex(300, 200, 150));
+            cloud.verticies.Add(new Vertex(250, 150, 150));
+            cloud.verticies.Add(new Vertex(150, 150, 150));
+            recalcSliders();
         }
         // HANDLERS
         private void clearCanvasToolStripMenuItem_Click(object sender, EventArgs e)
@@ -142,6 +160,8 @@ namespace GK1_PROJ2
             lightSourceAltitudeTxtBox.Text = lightSourceZ.ToString("0.000");
             if (lightStopAnimationCbox.Checked)
                 repaint();
+            foreach (var v in cloud.verticies)
+                v.z = lightSourceZ - 200;
         }
         private void objectColorLoadDefaultButton_Click(object sender, EventArgs e)
         {
@@ -438,9 +458,20 @@ namespace GK1_PROJ2
                         }
                     }
                 }
-                if (active)
-                    paintPoint(g, light.x, light.y, yellowBrush, lightRadious);
             }
+
+            if (cloudEnabled)
+                using (var fastbitmap = drawArea.FastLock())
+                    using (var fastbitmap2 = cloudTexture.FastLock())
+                    {
+                        recalcShade();
+                        paintCloud(shade, fastbitmap, shadeColor, null);
+                        paintCloud(cloud, fastbitmap, cloudColor, fastbitmap2);
+                    }   
+
+            if (active)
+                using (Graphics g = Graphics.FromImage(drawArea))
+                    paintPoint(g, light.x, light.y, yellowBrush, lightRadious);
 
             if (colorChangePending)
             {
@@ -779,6 +810,36 @@ namespace GK1_PROJ2
         }
         private void moveLightSource()
         {
+            float maxX = float.MinValue;
+            float minX = float.MaxValue;
+
+            foreach(var v in cloud.verticies)
+            {
+                if (v.x > maxX)
+                    maxX = v.x;
+                if (v.x < minX) 
+                    minX = v.x;
+            }
+
+            if (!cloudReverse)
+            {
+                if (maxX + cloudStep >= canvas.Width)
+                    cloudReverse = true;
+            }
+            else
+            {
+                if (minX - cloudStep <= 0)
+                    cloudReverse = false;
+            }
+
+            foreach (var v in cloud.verticies)
+            {
+                if (cloudReverse)
+                    v.x -= cloudStep;
+                else
+                    v.x += cloudStep;
+            }
+
             (int x, int y) offset = (canvas.Width / 2, canvas.Height / 2);
             (int x, int y) realCoords = (light.x - offset.x, light.y - offset.y);
             int length = (int)Math.Sqrt(realCoords.x * realCoords.x + realCoords.y * realCoords.y);
@@ -969,9 +1030,107 @@ namespace GK1_PROJ2
             musicPlaying = !musicPlaying;
 
             if (musicPlaying)
-                enableAnimationMusicToolStripMenuItem.Text = "Disable animation music";
+                enableAnimationMusicToolStripMenuItem.Text = "Disable music";
             else
-                enableAnimationMusicToolStripMenuItem.Text = "Enable animation music";
+                enableAnimationMusicToolStripMenuItem.Text = "Enable music";
+        }
+        private void paintCloud(Polygon p, FastBitmap f, Color c, FastBitmap? f2)
+        {
+            SortedDictionary<int, List<Edge>> et = new SortedDictionary<int, List<Edge>>();
+            List<Edge> aet = new List<Edge>();
+            Vector3[] colors = new Vector3[maxVerticies];
+
+            for (int i = 0; i < p.verticies.Count; i++)
+            {
+                int inext = (i + 1 == p.verticies.Count) ? 0 : i + 1;
+                if (Math.Abs(p.verticies[inext].y - p.verticies[i].y) != 0)
+                {
+                    var ed = new Edge(p.verticies[i], p.verticies[inext]);
+                    if (!et.ContainsKey(ed.ymin))
+                        et.Add(ed.ymin, new List<Edge>());
+                    et[ed.ymin].Add(ed);
+                }
+            }
+
+            if (et.Count > 0)
+            {
+                var curY = et.First().Key;
+                while (et.Count > 0 || aet.Count > 0)
+                {
+                    if (et.Count > 0)
+                        if (curY == et.First().Key)
+                        {
+                            foreach (var e in et.First().Value)
+                                aet.Add(e);
+                            et.Remove(curY);
+                            //MAYBE SORT HERE
+                            aet.Sort((p, q) => xComparator(p, q));
+                        }
+                    for (int i = 0; i < aet.Count;)
+                    {
+                        if (aet[i].ymax == curY)
+                            aet.RemoveAt(i);
+                        else
+                            i++;
+                    }
+                    //aet.Sort((p, q) => xComparator(p, q));
+
+                    for (int i = 0; i + 1 < aet.Count;)
+                    {
+                        int x1 = (int)aet[i].x;
+                        int x2 = (int)aet[i + 1].x;
+                        int xMax = Math.Max(x1, x2);
+                        int xMin = Math.Min(x1, x2);
+
+                        for (int j = xMin; j <= xMax; j++)
+                        {
+                            if (f2 != null)
+                            {
+                                var color = f2.GetPixel(j, curY);
+                                f.SetPixel(j, curY, color);
+                            }
+                            else
+                            {
+                                f.SetPixel(j, curY, c);
+                            }
+                        }
+                        aet[i].x += aet[i].d;
+                        aet[i + 1].x += aet[i + 1].d;
+                        i += 2;
+                    }
+                    curY++;
+                }
+            }
+        }
+        private void enableCloudsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cloudEnabled = !cloudEnabled;
+
+            if (cloudEnabled)
+                enableAnimationMusicToolStripMenuItem.Text = "Disable clouds";
+            else
+                enableAnimationMusicToolStripMenuItem.Text = "Enable clouds";
+        }
+        private void recalcShade()
+        {
+            shade.verticies.Clear();
+
+            foreach (var v in cloud.verticies)
+            {
+                //float x = lightSourceZ * (v.x - light.x) / (v.z - lightSourceZ) + light.x;
+                float x = (light.x * v.z - lightSourceZ * v.x) / (v.z - lightSourceZ) + light.x;
+                if (x <= 0)
+                    x = 1;
+                if (x >= drawArea.Width)
+                    x = drawArea.Width - 1;
+                //float y = lightSourceZ * (v.y - light.y) / (v.z - lightSourceZ) + light.y;
+                float y = (light.y * v.z - lightSourceZ * v.y) / (v.z - lightSourceZ) + light.y;
+                if (y <= 0)
+                    y = 1;
+                if (y >= drawArea.Height)
+                    y = drawArea.Height - 1;
+                shade.verticies.Add(new Vertex(x, y, 0));
+            }
         }
     }
     public class Vertex
