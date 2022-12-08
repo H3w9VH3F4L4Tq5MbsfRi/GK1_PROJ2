@@ -244,15 +244,30 @@ namespace GK1_PROJ2
         {
             calculatedAtPointToolStripMenuItem.Checked = true;
             vetrexInterpolationToolStripMenuItem.Checked = false;
+            noneToolStripMenuItem.Checked = false;
             if (lightStopAnimationCbox.Checked)
                 repaint();
+            if (!active && polygons.Count != 0)
+                launchKernel();
         }
         private void vetrexInterpolationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             vetrexInterpolationToolStripMenuItem.Checked = true;
             calculatedAtPointToolStripMenuItem.Checked = false;
+            noneToolStripMenuItem.Checked = false;
             if (lightStopAnimationCbox.Checked)
                 repaint();
+            if (!active && polygons.Count != 0)
+                launchKernel();
+        }
+        private void noneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            noneToolStripMenuItem.Checked = true;
+            vetrexInterpolationToolStripMenuItem.Checked = false;
+            calculatedAtPointToolStripMenuItem.Checked = false;
+            if (lightStopAnimationCbox.Checked)
+                repaint();
+            terminate = true;
         }
         private void modifyNormalsCbutton_CheckedChanged(object sender, EventArgs e)
         {
@@ -319,9 +334,32 @@ namespace GK1_PROJ2
         {
             loadDefault("guzik.obj");
         }
+        private void fullTorrusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadDefault("fullTorrus.obj");
+        }
         private void mainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             terminate = true;
+        }
+        private void enableCloudsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cloudEnabled = !cloudEnabled;
+
+            if (cloudEnabled)
+                enableCloudsToolStripMenuItem.Text = "Disable clouds";
+            else
+                enableCloudsToolStripMenuItem.Text = "Enable clouds";
+        }
+        private void showVerticiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (noneToolStripMenuItem.Checked)
+                repaint();
+        }
+        private void showEdgesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (noneToolStripMenuItem.Checked)
+                repaint();
         }
         // MY FUNCTIONS
         private bool processFile(string path)
@@ -437,8 +475,9 @@ namespace GK1_PROJ2
                 {
                     fastbitmap.Clear(canvasColor);
 
-                foreach (var p in polygons)
-                    fillpolygon(p, fastbitmap, fastbitmap2);
+                    if (!noneToolStripMenuItem.Checked)
+                        foreach (var p in polygons)
+                            fillpolygon(p, fastbitmap, fastbitmap2);
                 }
 
             using (Graphics g = Graphics.FromImage(drawArea))
@@ -460,7 +499,7 @@ namespace GK1_PROJ2
                 }
             }
 
-            if (cloudEnabled)
+            if (cloudEnabled && !noneToolStripMenuItem.Checked)
                 using (var fastbitmap = drawArea.FastLock())
                     using (var fastbitmap2 = cloudTexture.FastLock())
                     {
@@ -775,8 +814,7 @@ namespace GK1_PROJ2
                 calcCoefficiants();
                 repaint();
                 MessageBox.Show("Succesfully loaded " + polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Thread t = new Thread(new ThreadStart(animation));
-                t.Start();
+                launchKernel();
             }
         }
         private void loadDefault(string s)
@@ -1102,15 +1140,6 @@ namespace GK1_PROJ2
                 }
             }
         }
-        private void enableCloudsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            cloudEnabled = !cloudEnabled;
-
-            if (cloudEnabled)
-                enableAnimationMusicToolStripMenuItem.Text = "Disable clouds";
-            else
-                enableAnimationMusicToolStripMenuItem.Text = "Enable clouds";
-        }
         private void recalcShade()
         {
             shade.verticies.Clear();
@@ -1131,6 +1160,11 @@ namespace GK1_PROJ2
                     y = drawArea.Height - 1;
                 shade.verticies.Add(new Vertex(x, y, 0));
             }
+        }
+        private void launchKernel()
+        {
+            Thread t = new Thread(new ThreadStart(animation));
+            t.Start();
         }
     }
     public class Vertex
