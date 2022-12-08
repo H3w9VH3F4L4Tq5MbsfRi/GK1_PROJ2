@@ -18,21 +18,17 @@ namespace GK1_PROJ2
 {
     public partial class mainWindow : Form
     {
-        private List<Vertex> vertices;
-        private List<Polygon> polygons;
-        private List<Vector3> normals;
-        private float minX;
-        private float minY;
-        private float minZ;
-        private float maxX;
-        private float maxY;
-        private float maxZ;
+        private List<Figure> figures;
+        private Polygon shade;
+        private Polygon cloud;
         private Bitmap drawArea;
         private Bitmap objectColor;
         private string defaultTexture;
         private static Color canvasColor = Color.HotPink;
         private static Brush blackBrush = Brushes.Black;
         private static Brush yellowBrush = Brushes.Yellow;
+        private static Color cloudColor = Color.Blue;
+        private static Color shadeColor = Color.Black;
         private const int pointRadious = 4;
         private const int lightRadious = 10;
         private static Pen edgePen = new Pen(blackBrush, 2);
@@ -41,12 +37,12 @@ namespace GK1_PROJ2
         private (int x, int y) light = (360, 12);
         private int state = 0;
         private bool reverse = false;
-        private float[,,] coefs;
         private Vector3 lightColor;
         private static Vector3 vv = new Vector3(0, 0, 1);
-        // change this to generalise
         private const int maxVerticies = 3;
         private const int lightStep = 2;
+        private const float cloudStep = 10;
+
         private float lightSourceZ = 0;
         private float kd = 0;
         private float ks = 0;
@@ -56,35 +52,22 @@ namespace GK1_PROJ2
         private bool colorChangePending = false;
         private bool usingModifiedNormals = false;
         private bool musicPlaying = false;
-        private Polygon cloud;
         private bool cloudReverse = false;
-        private float cloudStep = 10;
         private bool cloudEnabled = false;
-        private static Color cloudColor = Color.Blue;
-        private Polygon shade = new Polygon();
-        private static Color shadeColor = Color.Black;
+        
         private Bitmap cloudTexture;
         public mainWindow()
         {
             InitializeComponent();
             defaultTexture = System.IO.Path.GetFullPath(@"..\..\..\") + "\\default_object_color.jpg";
             string cloudString = System.IO.Path.GetFullPath(@"..\..\..\") + "\\cloud.jpg";
-            vertices = new List<Vertex>();
-            polygons = new List<Polygon>();
-            normals = new List<Vector3>();
+            figures = new List<Figure>();
             drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             objectColor = new Bitmap(Image.FromFile(defaultTexture), canvas.Size.Width, canvas.Size.Height);
             cloudTexture = new Bitmap(Image.FromFile(cloudString), canvas.Size.Width, canvas.Size.Height);
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
                 g.Clear(canvasColor);
-            minX = float.MaxValue;
-            maxX = float.MinValue;
-            minY = float.MaxValue;
-            maxY = float.MinValue;
-            minZ = float.MaxValue;
-            maxZ = float.MinValue;
-            coefs = new float[canvas.Size.Width, canvas.Size.Height, maxVerticies];
             lightColor = new Vector3(1, 1, 1);
             cloud = new Polygon();
             cloud.verticies.Add(new Vertex(100, 200, 150));
@@ -93,12 +76,14 @@ namespace GK1_PROJ2
             cloud.verticies.Add(new Vertex(300, 200, 150));
             cloud.verticies.Add(new Vertex(250, 150, 150));
             cloud.verticies.Add(new Vertex(150, 150, 150));
+            shade = new Polygon();
             recalcSliders();
         }
         // HANDLERS
         private void clearCanvasToolStripMenuItem_Click(object sender, EventArgs e)
         {
             clean();
+            figures = new List<Figure>();
         }
         private void loadobjFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -247,7 +232,7 @@ namespace GK1_PROJ2
             noneToolStripMenuItem.Checked = false;
             if (lightStopAnimationCbox.Checked)
                 repaint();
-            if (!active && polygons.Count != 0)
+            if (!active && figures.Count != 0)
                 launchKernel();
         }
         private void vetrexInterpolationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -257,7 +242,7 @@ namespace GK1_PROJ2
             noneToolStripMenuItem.Checked = false;
             if (lightStopAnimationCbox.Checked)
                 repaint();
-            if (!active && polygons.Count != 0)
+            if (!active && figures.Count != 0)
                 launchKernel();
         }
         private void noneToolStripMenuItem_Click(object sender, EventArgs e)
@@ -371,6 +356,8 @@ namespace GK1_PROJ2
             float z = 0;
             int v = 0;
             int vn = 0;
+            figures.Add(new Figure());
+            int indx = figures.Count - 1;
 
             try
             {
@@ -385,19 +372,19 @@ namespace GK1_PROJ2
                                 x = float.Parse(parts[1]);
                                 y = float.Parse(parts[2]);
                                 z = float.Parse(parts[3]);
-                                vertices.Add(new Vertex(x, y, z));
-                                if (x < minX)
-                                    minX = x;
-                                if (x > maxX)
-                                    maxX = x;
-                                if (y < minY)
-                                    minY = y;
-                                if (y > maxY)
-                                    maxY = y;
-                                if (z < minZ)
-                                    minZ = z;
-                                if (z > maxZ)
-                                    maxZ = z;
+                                figures[indx].vertices.Add(new Vertex(x, y, z));
+                                if (x < figures[indx].minX)
+                                    figures[indx].minX = x;
+                                if (x > figures[indx].maxX)
+                                    figures[indx].maxX = x;
+                                if (y < figures[indx].minY)
+                                    figures[indx].minY = y;
+                                if (y > figures[indx].maxY)
+                                    figures[indx].maxY = y;
+                                if (z < figures[indx].minZ)
+                                    figures[indx].minZ = z;
+                                if (z > figures[indx].maxZ)
+                                    figures[indx].maxZ = z;
                                 break;
                             }
                         case "vn":
@@ -405,20 +392,19 @@ namespace GK1_PROJ2
                                 x = float.Parse(parts[1]);
                                 y = float.Parse(parts[2]);
                                 z = float.Parse(parts[3]);
-                                normals.Add(new Vector3(x, y, z));
+                                figures[indx].normals.Add(new Vector3(x, y, z));
                                 break;
                             }
                         case "f":
                             {
-
-                                polygons.Add(new Polygon());
+                                figures[indx].polygons.Add(new Polygon());
                                 for (int i = 1; i < parts.Length; i++)
                                 {
                                     parts2 = parts[i].Split('/');
                                     v = int.Parse(parts2[0]) - 1;
                                     vn = int.Parse(parts2[2]) - 1;
-                                    vertices[v].normal = normals[vn];
-                                    polygons[polygons.Count - 1].verticies.Add(vertices[v]);
+                                    figures[indx].vertices[v].normal = figures[indx].normals[vn];
+                                    figures[indx].polygons[figures[indx].polygons.Count - 1].verticies.Add(figures[indx].vertices[v]);
                                 }
                                 break;
                             }
@@ -430,7 +416,7 @@ namespace GK1_PROJ2
                     }
                 }
 
-                if (vertices.Count > 0 && normals.Count > 0 && polygons.Count > 0)
+                if (figures[indx].vertices.Count > 0 && figures[indx].normals.Count > 0 && figures[indx].polygons.Count > 0)
                     return true;
                 else
                     throw new Exception();
@@ -443,6 +429,8 @@ namespace GK1_PROJ2
         }
         private void rescaleVerticies()
         {
+            int indx = figures.Count - 1;
+
             float height = canvas.Height - padding;
             float width = canvas.Width - padding;
 
@@ -450,18 +438,18 @@ namespace GK1_PROJ2
 
             float k;
 
-            if ((width / height) > ((maxX - minX) / (maxY - minY)))
-                k = height / (maxY - minY);
+            if ((width / height) > ((figures[indx].maxX - figures[indx].minX) / (figures[indx].maxY - figures[indx].minY)))
+                k = height / (figures[indx].maxY - figures[indx].minY);
             else
-                k = width / (maxX - minX);
+                k = width / (figures[indx].maxX - figures[indx].minX);
 
-            foreach (var v in vertices)
+            foreach (var v in figures[indx].vertices)
             {
                 v.x *= k;
                 v.x += center.x;
                 v.y *= k;
                 v.y += center.y;
-                v.z += minZ;
+                v.z += figures[indx].minZ;
                 v.z *= k;
                 //v.normal.X *= k;
                 //v.normal.Y *= k;
@@ -476,27 +464,30 @@ namespace GK1_PROJ2
                     fastbitmap.Clear(canvasColor);
 
                     if (!noneToolStripMenuItem.Checked)
-                        foreach (var p in polygons)
-                            fillpolygon(p, fastbitmap, fastbitmap2);
+                        //foreach (var f in figures)
+                        for(int i = 0; i < figures.Count; i++)
+                            foreach (var p in figures[i].polygons)
+                                fillpolygon(p, fastbitmap, fastbitmap2, figures[i].coefs);
                 }
 
             using (Graphics g = Graphics.FromImage(drawArea))
             {
-                foreach (var p in polygons)
-                {
-                    for (int i = 0; i < p.verticies.Count; i++)
+                foreach (var f in figures)
+                    foreach (var p in f.polygons)
                     {
-                        if (showVerticiesToolStripMenuItem.Checked)
-                            paintPoint(g, p.verticies[i].x, p.verticies[i].y, blackBrush);
-                        if (showEdgesToolStripMenuItem.Checked)
+                        for (int i = 0; i < p.verticies.Count; i++)
                         {
-                            int inext = (i + 1 == p.verticies.Count) ? 0 : i + 1;
-                            PointF start = new PointF(p.verticies[i].x, p.verticies[i].y);
-                            PointF end = new PointF(p.verticies[inext].x, p.verticies[inext].y);
-                            g.DrawLine(edgePen, start, end);
+                            if (showVerticiesToolStripMenuItem.Checked)
+                                paintPoint(g, p.verticies[i].x, p.verticies[i].y, blackBrush);
+                            if (showEdgesToolStripMenuItem.Checked)
+                            {
+                                int inext = (i + 1 == p.verticies.Count) ? 0 : i + 1;
+                                PointF start = new PointF(p.verticies[i].x, p.verticies[i].y);
+                                PointF end = new PointF(p.verticies[inext].x, p.verticies[inext].y);
+                                g.DrawLine(edgePen, start, end);
+                            }
                         }
                     }
-                }
             }
 
             if (cloudEnabled && !noneToolStripMenuItem.Checked)
@@ -542,20 +533,14 @@ namespace GK1_PROJ2
         private void clean()
         {
             if (active)
+            {
                 terminate = true;
+                Thread.Sleep(2000);
+            }
             drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
             canvas.Image = drawArea;
             using (Graphics g = Graphics.FromImage(drawArea))
                 g.Clear(canvasColor);
-            minX = float.MaxValue;
-            maxX = float.MinValue;
-            minY = float.MaxValue;
-            maxY = float.MinValue;
-            minZ = float.MaxValue;
-            maxZ = float.MinValue;
-            vertices = new List<Vertex>();
-            polygons = new List<Polygon>();
-            normals = new List<Vector3>();
         }
         private void recalcSliders()
         {
@@ -574,7 +559,7 @@ namespace GK1_PROJ2
             this.kdTxtBox.Text = (((double)(this.kdTrackBar.Maximum - this.kdTrackBar.Minimum) / 2 + this.kdTrackBar.Minimum) / 1000).ToString("0.000");
 
         }
-        private void fillpolygon(Polygon p, FastBitmap f, FastBitmap f2)
+        private void fillpolygon(Polygon p, FastBitmap f, FastBitmap f2, float[,,] coefs)
         {
             SortedDictionary<int, List<Edge>> et = new SortedDictionary<int, List<Edge>>();
             List<Edge> aet = new List<Edge>();
@@ -645,7 +630,7 @@ namespace GK1_PROJ2
                     for (int j = xMin; j <= xMax; j++)
                     {
                         if (calculatedAtPointToolStripMenuItem.Checked)
-                            calculateAndPaintColor(p, j, curY, f, f2);
+                            calculateAndPaintColor(p, j, curY, f, f2, coefs);
                         else
                         {
                             Vector3 finalColor = new Vector3(0, 0, 0);
@@ -679,9 +664,11 @@ namespace GK1_PROJ2
         }
         private void calcCoefficiants()
         {
-            coefs = new float[canvas.Size.Width, canvas.Size.Height,maxVerticies];
+            int indx = figures.Count - 1;
 
-            foreach(var p in polygons)
+            figures[indx].coefs = new float[canvas.Size.Width, canvas.Size.Height, maxVerticies];
+
+            foreach (var p in figures[indx].polygons)
             {
                 SortedDictionary<int, List<Edge>> et = new SortedDictionary<int, List<Edge>>();
                 List<Edge> aet = new List<Edge>();
@@ -742,13 +729,13 @@ namespace GK1_PROJ2
                                 float b = calcLength(p.verticies[kNext].x, p.verticies[kNext].y, j, curY);
                                 float c = calcLength(j, curY, p.verticies[k].x, p.verticies[k].y);
                                 float pe = (a + b + c) / 2;
-                                coefs[j, curY, kkNext] = (float)(Math.Sqrt(pe * (pe - a) * (pe - b) * (pe - c)));
-                                area += coefs[j, curY, kkNext];
+                                figures[indx].coefs[j, curY, kkNext] = (float)(Math.Sqrt(pe * (pe - a) * (pe - b) * (pe - c)));
+                                area += figures[indx].coefs[j, curY, kkNext];
                             }
 
                             if (area > 0)
                                 for (int k = 0; k < maxVerticies; k++)
-                                    coefs[j, curY, k] = (float)(coefs[j, curY, k] / area);
+                                    figures[indx].coefs[j, curY, k] = (float)(figures[indx].coefs[j, curY, k] / area);
                         }
                         aet[i].x += aet[i].d;
                         aet[i + 1].x += aet[i + 1].d;
@@ -762,7 +749,7 @@ namespace GK1_PROJ2
         {
             return (float)Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
         }
-        private void calculateAndPaintColor(Polygon p, int x, int y, FastBitmap f, FastBitmap f2)
+        private void calculateAndPaintColor(Polygon p, int x, int y, FastBitmap f, FastBitmap f2, float[,,] coefs)
         {
             Vector3 vector = new Vector3();
             float z = 0;
@@ -813,7 +800,7 @@ namespace GK1_PROJ2
                 normaliseVectors();
                 calcCoefficiants();
                 repaint();
-                MessageBox.Show("Succesfully loaded " + polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Succesfully loaded " + figures[figures.Count - 1].polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 launchKernel();
             }
         }
@@ -823,8 +810,8 @@ namespace GK1_PROJ2
             loadFile(s2);
         }
         private void normaliseVectors()
-        {
-            foreach(var p in polygons)
+        { 
+            foreach(var p in figures[figures.Count-1].polygons)
                 foreach(var v in p.verticies)
                 {
                     float len = (float)Math.Sqrt(v.normal.X * v.normal.X + v.normal.Y * v.normal.Y + v.normal.Z * v.normal.Z);
@@ -1033,13 +1020,12 @@ namespace GK1_PROJ2
                     playing = false;
                 }
             }
-
-            terminate = false;
-            active = false;
             waveOutDevice.Stop();
             audioFileReader.Dispose();
             waveOutDevice.Dispose();
+            active = false;
             repaint();
+            terminate = false;
             return;
         }
         private void modifyNormals(string pa)
@@ -1047,7 +1033,7 @@ namespace GK1_PROJ2
             var nmap = new Bitmap(Image.FromFile(pa), canvas.Size.Width, canvas.Size.Height);
 
             using (var fastbitmap = nmap.FastLock())
-                foreach (var p in polygons)
+                foreach (var p in figures[figures.Count - 1].polygons)
                     foreach(var v in p.verticies)
                     {
                         var color = fastbitmap.GetPixel((int)v.x, (int)v.y);
@@ -1216,6 +1202,33 @@ namespace GK1_PROJ2
             }
 
             d = (v2.x - v1.x) / (v2.y - v1.y);
+        }
+    }
+    public class Figure
+    {
+        public List<Polygon> polygons;
+        public List<Vertex> vertices;
+        public List<Vector3> normals;
+        public float[,,] coefs;
+        public float minX;
+        public float maxX;
+        public float minY;
+        public float maxY;
+        public float minZ;
+        public float maxZ;
+
+        public Figure()
+        {
+            this.polygons = new List<Polygon>();
+            this.vertices = new List<Vertex>();
+            this.normals = new List<Vector3>();
+            this.coefs = new float[0, 0, 0];
+            minX = float.MaxValue;
+            maxX = float.MinValue;
+            minY = float.MaxValue;
+            maxY = float.MinValue;
+            minZ = float.MaxValue;
+            maxZ = float.MinValue;
         }
     }
 }
