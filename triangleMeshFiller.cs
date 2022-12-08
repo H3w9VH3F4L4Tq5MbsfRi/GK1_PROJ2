@@ -23,6 +23,7 @@ namespace GK1_PROJ2
         private Polygon cloud;
         private Bitmap drawArea;
         private Bitmap objectColor;
+        private Bitmap cloudTexture;
         private string defaultTexture;
         private static Color canvasColor = Color.HotPink;
         private static Brush blackBrush = Brushes.Black;
@@ -43,6 +44,7 @@ namespace GK1_PROJ2
         private const int lightStep = 2;
         private const float cloudStep = 10;
 
+        private int loadedFigures = 0;
         private float lightSourceZ = 0;
         private float kd = 0;
         private float ks = 0;
@@ -54,8 +56,7 @@ namespace GK1_PROJ2
         private bool musicPlaying = false;
         private bool cloudReverse = false;
         private bool cloudEnabled = false;
-        
-        private Bitmap cloudTexture;
+        private bool clear = false;
         public mainWindow()
         {
             InitializeComponent();
@@ -82,8 +83,17 @@ namespace GK1_PROJ2
         // HANDLERS
         private void clearCanvasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            clean();
-            figures = new List<Figure>();
+            if (!terminate)
+            {
+                clear = true;
+                terminate = true;
+            }
+            else
+            {
+                figures = new List<Figure>();
+                loadedFigures = 0;
+                repaint();
+            }
         }
         private void loadobjFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -232,7 +242,7 @@ namespace GK1_PROJ2
             noneToolStripMenuItem.Checked = false;
             if (lightStopAnimationCbox.Checked)
                 repaint();
-            if (!active && figures.Count != 0)
+            if (!active && loadedFigures != 0)
                 launchKernel();
         }
         private void vetrexInterpolationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -242,7 +252,7 @@ namespace GK1_PROJ2
             noneToolStripMenuItem.Checked = false;
             if (lightStopAnimationCbox.Checked)
                 repaint();
-            if (!active && figures.Count != 0)
+            if (!active && loadedFigures != 0)
                 launchKernel();
         }
         private void noneToolStripMenuItem_Click(object sender, EventArgs e)
@@ -250,6 +260,7 @@ namespace GK1_PROJ2
             noneToolStripMenuItem.Checked = true;
             vetrexInterpolationToolStripMenuItem.Checked = false;
             calculatedAtPointToolStripMenuItem.Checked = false;
+            showEdgesToolStripMenuItem.Checked = true;
             if (lightStopAnimationCbox.Checked)
                 repaint();
             terminate = true;
@@ -347,6 +358,24 @@ namespace GK1_PROJ2
                 repaint();
         }
         // MY FUNCTIONS
+        private void loadFile(string path)
+        {
+            if (processFile(path))
+            {
+                rescaleVerticies();
+                normaliseVectors();
+                calcCoefficiants();
+                loadedFigures++;
+                if (!active)
+                {
+                    if (noneToolStripMenuItem.Checked)
+                        repaint();
+                    else
+                        launchKernel();
+                }
+                MessageBox.Show("Succesfully loaded " + figures[figures.Count - 1].polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
         private bool processFile(string path)
         {
             string[] parts;
@@ -456,6 +485,73 @@ namespace GK1_PROJ2
                 //v.normal.Z *= k;
             }
         }
+        private void normaliseVectors()
+        {
+            foreach (var p in figures[figures.Count - 1].polygons)
+                foreach (var v in p.verticies)
+                {
+                    float len = (float)Math.Sqrt(v.normal.X * v.normal.X + v.normal.Y * v.normal.Y + v.normal.Z * v.normal.Z);
+                    v.normal.X /= len;
+                    v.normal.Y /= len;
+                    v.normal.Z /= len;
+                    v.mNormal = v.normal;
+                }
+        }
+        private void launchKernel()
+        {
+            Thread t = new Thread(new ThreadStart(animation));
+            t.Start();
+        }
+        private void animation()
+        {
+            bool playing = false;
+            string music = System.IO.Path.GetFullPath(@"..\..\..\") + "\\animation_music.mp3";
+            IWavePlayer waveOutDevice = new WaveOut();
+            AudioFileReader audioFileReader = new AudioFileReader(music);
+            waveOutDevice.Init(audioFileReader);
+            //waveOutDevice.PlaybackStopped += endOfMusicEventHandler();
+
+            active = true;
+            while (!terminate)
+            {
+                if (!lightStopAnimationCbox.Checked)
+                {
+                    moveLightSource();
+                    repaint();
+                    if (!playing && musicPlaying)
+                    {
+                        waveOutDevice.Play();
+                        playing = true;
+                    }
+                }
+                else
+                {
+                    if (playing)
+                    {
+                        waveOutDevice.Stop();
+                        playing = false;
+                    }
+                }
+                if (playing && !musicPlaying)
+                {
+                    waveOutDevice.Stop();
+                    playing = false;
+                }
+            }
+            waveOutDevice.Stop();
+            audioFileReader.Dispose();
+            waveOutDevice.Dispose();
+            active = false;
+            if (clear)
+            {
+                figures = new List<Figure>();
+                loadedFigures = 0;
+            }
+            clear = false;
+            repaint();
+            terminate = false;
+            return;
+        }
         private void repaint()
         {
             using (var fastbitmap = drawArea.FastLock())
@@ -464,8 +560,7 @@ namespace GK1_PROJ2
                     fastbitmap.Clear(canvasColor);
 
                     if (!noneToolStripMenuItem.Checked)
-                        //foreach (var f in figures)
-                        for(int i = 0; i < figures.Count; i++)
+                        for(int i = 0; i < loadedFigures; i++)
                             foreach (var p in figures[i].polygons)
                                 fillpolygon(p, fastbitmap, fastbitmap2, figures[i].coefs);
                 }
@@ -529,18 +624,6 @@ namespace GK1_PROJ2
         private void paintPoint(Graphics g, float x, float y, Brush color, int rad = pointRadious)
         {
             g.FillEllipse(color, x - rad, y - rad, rad * 2, rad * 2);
-        }
-        private void clean()
-        {
-            if (active)
-            {
-                terminate = true;
-                Thread.Sleep(2000);
-            }
-            drawArea = new Bitmap(canvas.Size.Width, canvas.Size.Height);
-            canvas.Image = drawArea;
-            using (Graphics g = Graphics.FromImage(drawArea))
-                g.Clear(canvasColor);
         }
         private void recalcSliders()
         {
@@ -791,35 +874,10 @@ namespace GK1_PROJ2
             colorF = Color.FromArgb((byte)255, (byte)finalColor.X, (byte)finalColor.Y, (byte)finalColor.Z);
             f.SetPixel(x, y, colorF);
         }
-        private void loadFile(string path)
-        {
-            clean();
-            if (processFile(path))
-            {
-                rescaleVerticies();
-                normaliseVectors();
-                calcCoefficiants();
-                repaint();
-                MessageBox.Show("Succesfully loaded " + figures[figures.Count - 1].polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                launchKernel();
-            }
-        }
         private void loadDefault(string s)
         {
             string s2 = System.IO.Path.GetFullPath(@"..\..\..\") + "sample figures\\" + s;
             loadFile(s2);
-        }
-        private void normaliseVectors()
-        { 
-            foreach(var p in figures[figures.Count-1].polygons)
-                foreach(var v in p.verticies)
-                {
-                    float len = (float)Math.Sqrt(v.normal.X * v.normal.X + v.normal.Y * v.normal.Y + v.normal.Z * v.normal.Z);
-                    v.normal.X /= len;
-                    v.normal.Y /= len;
-                    v.normal.Z /= len;
-                    v.mNormal = v.normal;
-                }
         }
         private Vector3 normaliseVector(Vector3 normal)
         {
@@ -984,50 +1042,6 @@ namespace GK1_PROJ2
             }
             light = (realCoords.x + offset.x, realCoords.y + offset.y);
         }
-        private void animation()
-        {
-            bool playing = false;
-            string music = System.IO.Path.GetFullPath(@"..\..\..\") + "\\animation_music.mp3";
-            IWavePlayer waveOutDevice = new WaveOut();
-            AudioFileReader audioFileReader = new AudioFileReader(music);
-            waveOutDevice.Init(audioFileReader);
-            //waveOutDevice.PlaybackStopped += endOfMusicEventHandler();
-
-            active = true;
-            while (!terminate) 
-            {
-                if (!lightStopAnimationCbox.Checked)
-                {
-                    moveLightSource();
-                    repaint();
-                    if (!playing && musicPlaying)
-                    {
-                        waveOutDevice.Play();
-                        playing = true;
-                    }
-                }
-                else
-                {
-                    if (playing)
-                    {
-                        waveOutDevice.Stop();
-                        playing = false;
-                    }
-                }
-                if (playing && !musicPlaying)
-                {
-                    waveOutDevice.Stop();
-                    playing = false;
-                }
-            }
-            waveOutDevice.Stop();
-            audioFileReader.Dispose();
-            waveOutDevice.Dispose();
-            active = false;
-            repaint();
-            terminate = false;
-            return;
-        }
         private void modifyNormals(string pa)
         {
             var nmap = new Bitmap(Image.FromFile(pa), canvas.Size.Width, canvas.Size.Height);
@@ -1146,11 +1160,6 @@ namespace GK1_PROJ2
                     y = drawArea.Height - 1;
                 shade.verticies.Add(new Vertex(x, y, 0));
             }
-        }
-        private void launchKernel()
-        {
-            Thread t = new Thread(new ThreadStart(animation));
-            t.Start();
         }
     }
     public class Vertex
