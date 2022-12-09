@@ -362,7 +362,14 @@ namespace GK1_PROJ2
         {
             if (processFile(path))
             {
-                rescaleVerticies();
+                (int, int) center = (180 + (loadedFigures % 3) * 180, 90 + ((loadedFigures/3) % 3) * 180);
+                if (loadedFigures >= 9)
+                {
+                    figures.RemoveAt(figures.Count - 1);
+                    MessageBox.Show("No more space for polygons", " ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                rescaleVerticies(center, 170);
                 normaliseVectors();
                 calcCoefficiants();
                 loadedFigures++;
@@ -456,21 +463,25 @@ namespace GK1_PROJ2
                 return false;
             }
         }
-        private void rescaleVerticies()
+        private void rescaleVerticies((int x, int y) center, int diameter)
         {
             int indx = figures.Count - 1;
 
-            float height = canvas.Height - padding;
-            float width = canvas.Width - padding;
-
-            (int x, int y) center = ((canvas.Width / 2), (canvas.Height / 2));
+            //float height = canvas.Height - padding;
+            //float width = canvas.Width - padding;
+            //(int x, int y) center = ((canvas.Width / 2), (canvas.Height / 2));
 
             float k;
 
-            if ((width / height) > ((figures[indx].maxX - figures[indx].minX) / (figures[indx].maxY - figures[indx].minY)))
-                k = height / (figures[indx].maxY - figures[indx].minY);
+            //if ((width / height) > ((figures[indx].maxX - figures[indx].minX) / (figures[indx].maxY - figures[indx].minY)))
+            //    k = height / (figures[indx].maxY - figures[indx].minY);
+            //else
+            //    k = width / (figures[indx].maxX - figures[indx].minX);
+
+            if (1 > ((figures[indx].maxX - figures[indx].minX) / (figures[indx].maxY - figures[indx].minY)))
+                k = diameter / (figures[indx].maxY - figures[indx].minY);
             else
-                k = width / (figures[indx].maxX - figures[indx].minX);
+                k = diameter / (figures[indx].maxX - figures[indx].minX);
 
             foreach (var v in figures[indx].vertices)
             {
@@ -567,8 +578,8 @@ namespace GK1_PROJ2
 
             using (Graphics g = Graphics.FromImage(drawArea))
             {
-                foreach (var f in figures)
-                    foreach (var p in f.polygons)
+                for (int j = 0; j < loadedFigures; j++)
+                    foreach (var p in figures[j].polygons)
                     {
                         for (int i = 0; i < p.verticies.Count; i++)
                         {
