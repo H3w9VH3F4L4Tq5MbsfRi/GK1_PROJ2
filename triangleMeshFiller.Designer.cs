@@ -37,6 +37,7 @@
             this.sphereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.monkeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.crystalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.hemisphereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.coneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cylinderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -169,6 +170,7 @@
             this.sphereToolStripMenuItem,
             this.monkeyToolStripMenuItem,
             this.crystalToolStripMenuItem,
+            this.toolStripSeparator1,
             this.hemisphereToolStripMenuItem,
             this.coneToolStripMenuItem,
             this.cylinderToolStripMenuItem,
@@ -184,7 +186,7 @@
             // 
             this.torrusToolStripMenuItem.Name = "torrusToolStripMenuItem";
             this.torrusToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.torrusToolStripMenuItem.Text = "Torrus";
+            this.torrusToolStripMenuItem.Text = "Torus";
             this.torrusToolStripMenuItem.Click += new System.EventHandler(this.torrusToolStripMenuItem_Click);
             // 
             // sphereToolStripMenuItem
@@ -207,6 +209,11 @@
             this.crystalToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
             this.crystalToolStripMenuItem.Text = "Crystal";
             this.crystalToolStripMenuItem.Click += new System.EventHandler(this.crystalToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(180, 6);
             // 
             // hemisphereToolStripMenuItem
             // 
@@ -1184,5 +1191,6 @@
         private ToolStripMenuItem torrusToolStripMenuItem;
         private ToolStripMenuItem monkeyToolStripMenuItem;
         private ToolStripMenuItem crystalToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
     }
 }

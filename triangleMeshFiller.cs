@@ -36,19 +36,19 @@ namespace GK1_PROJ2
         private static Pen edgePen = new Pen(blackBrush, 2);
         private const int padding = 150;
         private string texturePath = string.Empty;
-        private (int x, int y) light = (360, 12);
-        private int state = 0;
         private bool reverse = false;
-        private Vector3 lightColor;
         private static Vector3 vv = new Vector3(0, 0, 1);
         private const int maxVerticies = 3;
         private const int lightStep = 2;
         private const float cloudStep = 10;
         private static Vector3 cameraTarget = new Vector3(0, 0, 0);
         private static Vector3 cameraVector = new Vector3(0, 0, 1);
-        private const float angleStep = 0.01F;
+        private const float angleStep = 0.1F;
 
+        private Vector3 lightColor;
+        private (int x, int y) light = (360, 12);
         private int loadedFigures = 0;
+        private int state = 0;
         private float lightSourceZ = 0;
         private float currAngle = 0;
         private float kd = 0;
@@ -76,14 +76,14 @@ namespace GK1_PROJ2
             using (Graphics g = Graphics.FromImage(drawArea))
                 g.Clear(canvasColor);
             lightColor = new Vector3(1, 1, 1);
-            cloud = new Polygon('e');
+            cloud = new Polygon();
             cloud.verticies.Add(new Vertex(100, 200, 150));
             cloud.verticies.Add(new Vertex(150, 250, 150));
             cloud.verticies.Add(new Vertex(250, 250, 150));
             cloud.verticies.Add(new Vertex(300, 200, 150));
             cloud.verticies.Add(new Vertex(250, 150, 150));
             cloud.verticies.Add(new Vertex(150, 150, 150));
-            shade = new Polygon('e');
+            shade = new Polygon();
             recalcSliders();
         }
         // HANDLERS
@@ -382,34 +382,26 @@ namespace GK1_PROJ2
 
                 if (loadedFigures > 0)
                 {
-                    if (loadedFigures == 1)
-                    {
-                        for (int i = 0; i < figures[loadedFigures].vertices.Count; i++)
-                        {
-                            figures[loadedFigures].vertices[i].x += 1;
-                            figures[loadedFigures].vertices[i].y += 1;
-                            figures[loadedFigures].vertices[i].z += 1;
-                        }
-                        for (int i = 0; i < figures[loadedFigures].polygons.Count; i++)
-                            figures[loadedFigures].polygons[i].orientation = 'y';
-                    }
-                    else if (loadedFigures == 2)
-                    {
-                        for (int i = 0; i < figures[loadedFigures].vertices.Count; i++)
-                        {
-                            figures[loadedFigures].vertices[i].x -= 1;
-                            figures[loadedFigures].vertices[i].y -= 1;
-                            figures[loadedFigures].vertices[i].z -= 1;
-                        }
-                        for (int i = 0; i < figures[loadedFigures].polygons.Count; i++)
-                            figures[loadedFigures].polygons[i].orientation = 'z';
-                    }
+                    Random r = new Random();
+                    float x = (float)(r.NextDouble() * 4 - 2);
+                    float y = (float)(r.NextDouble() * 4 - 2);
+                    float z = (float)(r.NextDouble() * 4 - 2);
+                    int c = r.Next(0, 3);
+                    char cc = 'c';
+                    if (c == 0)
+                        cc = 'x';
+                    else if (c == 1)
+                        cc = 'y';
                     else
+                        cc = 'z';
+
+                    for (int i = 0; i < figures[loadedFigures].vertices.Count; i++)
                     {
-                        figures.RemoveAt(figures.Count - 1);
-                        MessageBox.Show("Implementation allows for max 3 figures!", " ", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
+                        figures[loadedFigures].vertices[i].x += x;
+                        figures[loadedFigures].vertices[i].y += y;
+                        figures[loadedFigures].vertices[i].z += z;
                     }
+                    figures[loadedFigures].orientation = cc;
                 }
 
                 loadedFigures++;
@@ -427,7 +419,7 @@ namespace GK1_PROJ2
             float z = 0;
             int v = 0;
             int vn = 0;
-            figures.Add(new Figure());
+            figures.Add(new Figure('x'));
             int indx = figures.Count - 1;
 
             try
@@ -468,7 +460,7 @@ namespace GK1_PROJ2
                             }
                         case "f":
                             {
-                                figures[indx].polygons.Add(new Polygon('x'));
+                                figures[indx].polygons.Add(new Polygon());
                                 for (int i = 1; i < parts.Length; i++)
                                 {
                                     parts2 = parts[i].Split('/');
@@ -616,15 +608,43 @@ namespace GK1_PROJ2
             using (Graphics g = Graphics.FromImage(drawArea))
             {
                 for (int j = 0; j < loadedFigures; j++)
+                {
+                    Matrix4x4 modelMatrix;
+                    switch (figures[j].orientation)
+                    {
+                        case 'x':
+                            {
+                                modelMatrix = Matrix4x4.CreateRotationX(currAngle);
+                                break;
+                            }
+                        case 'y':
+                            {
+                                modelMatrix = Matrix4x4.CreateRotationY(currAngle);
+                                break;
+                            }
+                        case 'z':
+                            {
+                                modelMatrix = Matrix4x4.CreateRotationZ(currAngle);
+                                break;
+                            }
+                        default:
+                            {
+                                throw new Exception();
+                            }
+                    }
+
+                    Matrix4x4 viewMatrix = Matrix4x4.CreateLookAt(new Vector3((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value), cameraTarget, cameraVector);
+                    Matrix4x4 projectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(pov, (float)canvas.Width / (float)canvas.Height, 1, 9999999);
+
                     foreach (var pe in figures[j].polygons)
                     {
-                        Polygon p = magicLabFuction(pe);
+                        Polygon p = calcViewPolygon(pe, modelMatrix, viewMatrix, projectionMatrix);
 
                         bool outOfBounds = false;
-                        foreach(var v in p.verticies)
+                        foreach (var v in p.verticies)
                             if (v.x < 0 || v.x >= canvas.Width || v.y < 0 || v.y >= canvas.Height)
                             {
-                                outOfBounds = true; 
+                                outOfBounds = true;
                                 break;
                             }
                         if (outOfBounds)
@@ -643,6 +663,7 @@ namespace GK1_PROJ2
                             }
                         }
                     }
+                }
             }
 
             if (cloudEnabled)
@@ -1221,36 +1242,9 @@ namespace GK1_PROJ2
                 shade.verticies.Add(new Vertex(x, y, 0));
             }
         }
-        private Polygon magicLabFuction(Polygon p)
+        private Polygon calcViewPolygon(Polygon p, Matrix4x4 modelMatrix, Matrix4x4 viewMatrix, Matrix4x4 projectionMatrix)
         {
-            Polygon exitPolygon = new Polygon(p.orientation);
-
-            Matrix4x4 modelMatrix;
-            switch (p.orientation)
-            {
-                case 'x':
-                    {
-                        modelMatrix = Matrix4x4.CreateRotationX(currAngle);
-                        break;
-                    }
-                case 'y':
-                    {
-                        modelMatrix = Matrix4x4.CreateRotationY(currAngle);
-                        break;
-                    }
-                case 'z':
-                    {
-                        modelMatrix = Matrix4x4.CreateRotationZ(currAngle);
-                        break;
-                    }
-                default:
-                    {
-                        throw new Exception();
-                    }
-            }
-
-            Matrix4x4 viewMatrix = Matrix4x4.CreateLookAt(new Vector3((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value), cameraTarget, cameraVector);
-            Matrix4x4 projectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(pov, (float)canvas.Height / (float)canvas.Width, 1, 9999999);
+            Polygon exitPolygon = new Polygon();
 
             foreach (var v in p.verticies)
             {
@@ -1283,11 +1277,9 @@ namespace GK1_PROJ2
     public class Polygon
     {
         public List<Vertex> verticies;
-        public char orientation;
-        public Polygon(char c)
+        public Polygon()
         {
             this.verticies = new List<Vertex>();
-            this.orientation = c;
         }
     }
     public class Edge
@@ -1327,8 +1319,9 @@ namespace GK1_PROJ2
         public float maxY;
         public float minZ;
         public float maxZ;
+        public char orientation;
 
-        public Figure()
+        public Figure(char c)
         {
             this.polygons = new List<Polygon>();
             this.vertices = new List<Vertex>();
@@ -1340,6 +1333,7 @@ namespace GK1_PROJ2
             maxY = float.MinValue;
             minZ = float.MaxValue;
             maxZ = float.MinValue;
+            this.orientation = c;
         }
     }
 }
