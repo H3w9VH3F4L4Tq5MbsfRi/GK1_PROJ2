@@ -13,6 +13,7 @@ using System.Media;
 using NAudio.Wave;
 using NAudio.Gui;
 using System.Xml.Serialization;
+using System.Globalization;
 
 namespace GK1_PROJ2
 {
@@ -43,12 +44,17 @@ namespace GK1_PROJ2
         private const int maxVerticies = 3;
         private const int lightStep = 2;
         private const float cloudStep = 10;
+        private static Vector3 cameraTarget = new Vector3(0, 0, 0);
+        private static Vector3 cameraVector = new Vector3(0, 0, 1);
+        private const float angleStep = 0.01F;
 
         private int loadedFigures = 0;
         private float lightSourceZ = 0;
+        private float currAngle = 0;
         private float kd = 0;
         private float ks = 0;
         private float m = 0;
+        private float pov = 1.047197176756411F;
         private bool terminate = false;
         private bool active = false;
         private bool colorChangePending = false;
@@ -70,14 +76,14 @@ namespace GK1_PROJ2
             using (Graphics g = Graphics.FromImage(drawArea))
                 g.Clear(canvasColor);
             lightColor = new Vector3(1, 1, 1);
-            cloud = new Polygon();
+            cloud = new Polygon('e');
             cloud.verticies.Add(new Vertex(100, 200, 150));
             cloud.verticies.Add(new Vertex(150, 250, 150));
             cloud.verticies.Add(new Vertex(250, 250, 150));
             cloud.verticies.Add(new Vertex(300, 200, 150));
             cloud.verticies.Add(new Vertex(250, 150, 150));
             cloud.verticies.Add(new Vertex(150, 150, 150));
-            shade = new Polygon();
+            shade = new Polygon('e');
             recalcSliders();
         }
         // HANDLERS
@@ -242,8 +248,6 @@ namespace GK1_PROJ2
             noneToolStripMenuItem.Checked = false;
             if (lightStopAnimationCbox.Checked)
                 repaint();
-            if (!active && loadedFigures != 0)
-                launchKernel();
         }
         private void vetrexInterpolationToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -252,18 +256,14 @@ namespace GK1_PROJ2
             noneToolStripMenuItem.Checked = false;
             if (lightStopAnimationCbox.Checked)
                 repaint();
-            if (!active && loadedFigures != 0)
-                launchKernel();
         }
         private void noneToolStripMenuItem_Click(object sender, EventArgs e)
         {
             noneToolStripMenuItem.Checked = true;
             vetrexInterpolationToolStripMenuItem.Checked = false;
             calculatedAtPointToolStripMenuItem.Checked = false;
-            showEdgesToolStripMenuItem.Checked = true;
             if (lightStopAnimationCbox.Checked)
                 repaint();
-            terminate = true;
         }
         private void modifyNormalsCbutton_CheckedChanged(object sender, EventArgs e)
         {
@@ -330,9 +330,21 @@ namespace GK1_PROJ2
         {
             loadDefault("guzik.obj");
         }
-        private void fullTorrusToolStripMenuItem_Click(object sender, EventArgs e)
+        private void sphereToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            loadDefault("fullTorrus.obj");
+            loadDefault("sphere.obj");
+        }
+        private void torrusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadDefault("torrus.obj");
+        }
+        private void monkeyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadDefault("monkey.obj");
+        }
+        private void crystalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            loadDefault("crystal.obj");
         }
         private void mainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -347,39 +359,62 @@ namespace GK1_PROJ2
             else
                 enableCloudsToolStripMenuItem.Text = "Enable clouds";
         }
-        private void showVerticiesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
-            if (noneToolStripMenuItem.Checked)
-                repaint();
-        }
-        private void showEdgesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (noneToolStripMenuItem.Checked)
-                repaint();
+            pov = (float)(POVtrackBar.Value / (1000 * 57.2958));
+            POVtextBox.Text = (pov * 57.2958).ToString("0.000");
         }
         // MY FUNCTIONS
         private void loadFile(string path)
         {
             if (processFile(path))
             {
-                (int, int) center = (180 + (loadedFigures % 3) * 180, 90 + ((loadedFigures/3) % 3) * 180);
-                if (loadedFigures >= 9)
+                //(int, int) center = (180 + (loadedFigures % 3) * 180, 90 + ((loadedFigures/3) % 3) * 180);
+                //if (loadedFigures >= 9)
+                //{
+                //    figures.RemoveAt(figures.Count - 1);
+                //    MessageBox.Show("No more space for polygons", " ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //    return;
+                //}
+                //rescaleVerticies(center, 170);
+                //normaliseVectors();
+                //calcCoefficiants();
+
+                if (loadedFigures > 0)
                 {
-                    figures.RemoveAt(figures.Count - 1);
-                    MessageBox.Show("No more space for polygons", " ", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    if (loadedFigures == 1)
+                    {
+                        for (int i = 0; i < figures[loadedFigures].vertices.Count; i++)
+                        {
+                            figures[loadedFigures].vertices[i].x += 1;
+                            figures[loadedFigures].vertices[i].y += 1;
+                            figures[loadedFigures].vertices[i].z += 1;
+                        }
+                        for (int i = 0; i < figures[loadedFigures].polygons.Count; i++)
+                            figures[loadedFigures].polygons[i].orientation = 'y';
+                    }
+                    else if (loadedFigures == 2)
+                    {
+                        for (int i = 0; i < figures[loadedFigures].vertices.Count; i++)
+                        {
+                            figures[loadedFigures].vertices[i].x -= 1;
+                            figures[loadedFigures].vertices[i].y -= 1;
+                            figures[loadedFigures].vertices[i].z -= 1;
+                        }
+                        for (int i = 0; i < figures[loadedFigures].polygons.Count; i++)
+                            figures[loadedFigures].polygons[i].orientation = 'z';
+                    }
+                    else
+                    {
+                        figures.RemoveAt(figures.Count - 1);
+                        MessageBox.Show("Implementation allows for max 3 figures!", " ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                 }
-                rescaleVerticies(center, 170);
-                normaliseVectors();
-                calcCoefficiants();
+
                 loadedFigures++;
                 if (!active)
-                {
-                    if (noneToolStripMenuItem.Checked)
-                        repaint();
-                    else
-                        launchKernel();
-                }
+                    launchKernel();
                 MessageBox.Show("Succesfully loaded " + figures[figures.Count - 1].polygons.Count.ToString() + " polygons.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -405,9 +440,9 @@ namespace GK1_PROJ2
                     {
                         case "v":
                             {
-                                x = float.Parse(parts[1]);
-                                y = float.Parse(parts[2]);
-                                z = float.Parse(parts[3]);
+                                x = float.Parse(parts[1], CultureInfo.InvariantCulture);
+                                y = float.Parse(parts[2], CultureInfo.InvariantCulture);
+                                z = float.Parse(parts[3], CultureInfo.InvariantCulture);
                                 figures[indx].vertices.Add(new Vertex(x, y, z));
                                 if (x < figures[indx].minX)
                                     figures[indx].minX = x;
@@ -425,20 +460,20 @@ namespace GK1_PROJ2
                             }
                         case "vn":
                             {
-                                x = float.Parse(parts[1]);
-                                y = float.Parse(parts[2]);
-                                z = float.Parse(parts[3]);
+                                x = float.Parse(parts[1], CultureInfo.InvariantCulture);
+                                y = float.Parse(parts[2], CultureInfo.InvariantCulture);
+                                z = float.Parse(parts[3], CultureInfo.InvariantCulture);
                                 figures[indx].normals.Add(new Vector3(x, y, z));
                                 break;
                             }
                         case "f":
                             {
-                                figures[indx].polygons.Add(new Polygon());
+                                figures[indx].polygons.Add(new Polygon('x'));
                                 for (int i = 1; i < parts.Length; i++)
                                 {
                                     parts2 = parts[i].Split('/');
-                                    v = int.Parse(parts2[0]) - 1;
-                                    vn = int.Parse(parts2[2]) - 1;
+                                    v = int.Parse(parts2[0], CultureInfo.InvariantCulture) - 1;
+                                    vn = int.Parse(parts2[2], CultureInfo.InvariantCulture) - 1;
                                     figures[indx].vertices[v].normal = figures[indx].normals[vn];
                                     figures[indx].polygons[figures[indx].polygons.Count - 1].verticies.Add(figures[indx].vertices[v]);
                                 }
@@ -528,6 +563,8 @@ namespace GK1_PROJ2
                 if (!lightStopAnimationCbox.Checked)
                 {
                     moveLightSource();
+                    currAngle += angleStep;
+                    currAngle = (float)(currAngle % (2 * Math.PI));
                     repaint();
                     if (!playing && musicPlaying)
                     {
@@ -579,8 +616,20 @@ namespace GK1_PROJ2
             using (Graphics g = Graphics.FromImage(drawArea))
             {
                 for (int j = 0; j < loadedFigures; j++)
-                    foreach (var p in figures[j].polygons)
+                    foreach (var pe in figures[j].polygons)
                     {
+                        Polygon p = magicLabFuction(pe);
+
+                        bool outOfBounds = false;
+                        foreach(var v in p.verticies)
+                            if (v.x < 0 || v.x >= canvas.Width || v.y < 0 || v.y >= canvas.Height)
+                            {
+                                outOfBounds = true; 
+                                break;
+                            }
+                        if (outOfBounds)
+                            continue;
+
                         for (int i = 0; i < p.verticies.Count; i++)
                         {
                             if (showVerticiesToolStripMenuItem.Checked)
@@ -596,7 +645,7 @@ namespace GK1_PROJ2
                     }
             }
 
-            if (cloudEnabled && !noneToolStripMenuItem.Checked)
+            if (cloudEnabled)
                 using (var fastbitmap = drawArea.FastLock())
                     using (var fastbitmap2 = cloudTexture.FastLock())
                     {
@@ -605,7 +654,7 @@ namespace GK1_PROJ2
                         paintCloud(cloud, fastbitmap, cloudColor, fastbitmap2);
                     }   
 
-            if (active)
+            if (active && !noneToolStripMenuItem.Checked)
                 using (Graphics g = Graphics.FromImage(drawArea))
                     paintPoint(g, light.x, light.y, yellowBrush, lightRadious);
 
@@ -1172,20 +1221,61 @@ namespace GK1_PROJ2
                 shade.verticies.Add(new Vertex(x, y, 0));
             }
         }
+        private Polygon magicLabFuction(Polygon p)
+        {
+            Polygon exitPolygon = new Polygon(p.orientation);
+
+            Matrix4x4 modelMatrix;
+            switch (p.orientation)
+            {
+                case 'x':
+                    {
+                        modelMatrix = Matrix4x4.CreateRotationX(currAngle);
+                        break;
+                    }
+                case 'y':
+                    {
+                        modelMatrix = Matrix4x4.CreateRotationY(currAngle);
+                        break;
+                    }
+                case 'z':
+                    {
+                        modelMatrix = Matrix4x4.CreateRotationZ(currAngle);
+                        break;
+                    }
+                default:
+                    {
+                        throw new Exception();
+                    }
+            }
+
+            Matrix4x4 viewMatrix = Matrix4x4.CreateLookAt(new Vector3((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value), cameraTarget, cameraVector);
+            Matrix4x4 projectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(pov, (float)canvas.Height / (float)canvas.Width, 1, 9999999);
+
+            foreach (var v in p.verticies)
+            {
+                Vector4 newV = Vector4.Transform(v.coords, modelMatrix);
+                newV = Vector4.Transform(newV, viewMatrix);
+                newV = Vector4.Transform(newV, projectionMatrix);
+                Vertex vv = new Vertex((canvas.Width / 2) * (newV.X / newV.W + 1), (canvas.Height / 2) * (newV.Y / newV.W + 1), (newV.Z / newV.W + 1));
+                exitPolygon.verticies.Add(vv);
+            }
+
+            return exitPolygon;
+        }
     }
     public class Vertex
     {
-        public float x;
-        public float y;
-        public float z;
+        public Vector4 coords;
+        public float x { get => coords.X; set => coords.X = value; }
+        public float y { get => coords.Y; set => coords.Y = value; }
+        public float z { get => coords.Z; set => coords.Z = value; }
         public Vector3 normal;
         public Vector3 mNormal;
 
-        public Vertex (float x, float y, float z)
+        public Vertex(float x, float y, float z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.coords = new Vector4(x, y, z, 1);
             this.normal = new Vector3();
             this.mNormal = new Vector3();
         }
@@ -1193,10 +1283,11 @@ namespace GK1_PROJ2
     public class Polygon
     {
         public List<Vertex> verticies;
-
-        public Polygon()
+        public char orientation;
+        public Polygon(char c)
         {
             this.verticies = new List<Vertex>();
+            this.orientation = c;
         }
     }
     public class Edge
