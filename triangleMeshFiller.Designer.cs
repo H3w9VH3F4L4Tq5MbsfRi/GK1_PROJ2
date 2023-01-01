@@ -285,9 +285,7 @@
             // 
             // showEdgesToolStripMenuItem
             // 
-            this.showEdgesToolStripMenuItem.Checked = true;
             this.showEdgesToolStripMenuItem.CheckOnClick = true;
-            this.showEdgesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showEdgesToolStripMenuItem.Name = "showEdgesToolStripMenuItem";
             this.showEdgesToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
             this.showEdgesToolStripMenuItem.Text = "Show edges";
@@ -305,7 +303,9 @@
             // 
             // calculatedAtPointToolStripMenuItem
             // 
+            this.calculatedAtPointToolStripMenuItem.Checked = true;
             this.calculatedAtPointToolStripMenuItem.CheckOnClick = true;
+            this.calculatedAtPointToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.calculatedAtPointToolStripMenuItem.Name = "calculatedAtPointToolStripMenuItem";
             this.calculatedAtPointToolStripMenuItem.Size = new System.Drawing.Size(223, 26);
             this.calculatedAtPointToolStripMenuItem.Text = "Calculated at point";
@@ -321,8 +321,6 @@
             // 
             // noneToolStripMenuItem
             // 
-            this.noneToolStripMenuItem.Checked = true;
-            this.noneToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.noneToolStripMenuItem.Name = "noneToolStripMenuItem";
             this.noneToolStripMenuItem.Size = new System.Drawing.Size(223, 26);
             this.noneToolStripMenuItem.Text = "None";
